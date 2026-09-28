@@ -1,6 +1,6 @@
-using TronderLeikan.Application.Tournaments.Queries.GetTournaments;
-using TronderLeikan.Application.Tournaments.Queries.GetTournamentBySlug;
 using TronderLeikan.Application.Tournaments.Queries.GetScoreboard;
+using TronderLeikan.Application.Tournaments.Queries.GetTournamentBySlug;
+using TronderLeikan.Application.Tournaments.Queries.GetTournaments;
 using TronderLeikan.Domain.Games;
 using TronderLeikan.Domain.Persons;
 using TronderLeikan.Domain.Tournaments;

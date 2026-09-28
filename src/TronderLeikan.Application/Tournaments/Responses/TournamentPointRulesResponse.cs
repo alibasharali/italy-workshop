@@ -1,4 +1,5 @@
 namespace TronderLeikan.Application.Tournaments.Responses;
+
 public record TournamentPointRulesResponse(
     int Participation,
     int FirstPlace,

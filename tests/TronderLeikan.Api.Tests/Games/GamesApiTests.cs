@@ -74,9 +74,9 @@ public class GamesApiTests(TronderLeikanApiFactory factory)
         var completeResponse = await _client.PostAsJsonAsync($"/api/v1/games/{gameId}/complete", new
         {
             gameId,
-            firstPlace  = new[] { personId1 },
+            firstPlace = new[] { personId1 },
             secondPlace = new[] { personId2 },
-            thirdPlace  = new[] { personId3 }
+            thirdPlace = new[] { personId3 }
         });
         completeResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
@@ -134,7 +134,9 @@ public class GamesApiTests(TronderLeikanApiFactory factory)
 
         var gameId = await (await _client.PostAsJsonAsync("/api/v1/games", new
         {
-            tournamentId, name = "Simracing 2", gameType = 1
+            tournamentId,
+            name = "Simracing 2",
+            gameType = 1
         })).Content.ReadFromJsonAsync<Guid>();
 
         await _client.PostAsJsonAsync($"/api/v1/games/{gameId}/simracing-results",
