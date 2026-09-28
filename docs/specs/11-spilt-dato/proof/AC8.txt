@@ -1,0 +1,34 @@
+> GET /api/v1/tournaments/10431eab-81c1-411e-9a42-87323125d19b/games
+< 200
+[
+  {
+    "id": "2ef7442a-3565-4662-93b2-6ef54873a6d7",
+    "tournamentId": "10431eab-81c1-411e-9a42-87323125d19b",
+    "name": "Mario Kart",
+    "location": null,
+    "playedOn": "2026-03-06",
+    "occasion": null,
+    "isDone": false,
+    "gameType": "Standard"
+  },
+  {
+    "id": "b3bf1ff7-4068-4284-8abc-6385dd71bf03",
+    "tournamentId": "10431eab-81c1-411e-9a42-87323125d19b",
+    "name": "Boccia",
+    "location": null,
+    "playedOn": "2026-03-13",
+    "occasion": null,
+    "isDone": false,
+    "gameType": "Standard"
+  },
+  {
+    "id": "8f7989da-b496-4ee8-9ba3-158cb51520b6",
+    "tournamentId": "10431eab-81c1-411e-9a42-87323125d19b",
+    "name": "Dart",
+    "location": null,
+    "playedOn": "2026-03-13",
+    "occasion": null,
+    "isDone": false,
+    "gameType": "Standard"
+  }
+]

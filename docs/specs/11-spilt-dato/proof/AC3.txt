@@ -1,0 +1,50 @@
+> POST /api/v1/games
+{
+  "tournamentId": "77496840-a5c8-4fde-904e-aef60e7b3ac9",
+  "name": "Nyttårsdart",
+  "gameType": "Standard",
+  "playedOn": "2027-01-01"
+}
+< 201
+"defc6968-a7c4-478c-a442-eb8c66cc146b"
+
+> POST /api/v1/games/defc6968-a7c4-478c-a442-eb8c66cc146b/participants
+{
+  "personId": "80d9b5ec-065d-44f6-9e42-8d93e7b8f9b2"
+}
+< 204
+
+> POST /api/v1/games/defc6968-a7c4-478c-a442-eb8c66cc146b/complete
+{
+  "firstPlace": [
+    "80d9b5ec-065d-44f6-9e42-8d93e7b8f9b2"
+  ],
+  "secondPlace": [],
+  "thirdPlace": []
+}
+< 204
+
+> GET /api/v1/games/defc6968-a7c4-478c-a442-eb8c66cc146b
+< 200
+{
+  "id": "defc6968-a7c4-478c-a442-eb8c66cc146b",
+  "tournamentId": "77496840-a5c8-4fde-904e-aef60e7b3ac9",
+  "name": "Nyttårsdart",
+  "description": null,
+  "playedOn": "2027-01-01",
+  "occasion": null,
+  "isDone": true,
+  "gameType": "Standard",
+  "hasBanner": false,
+  "isOrganizersParticipating": false,
+  "participants": [
+    "80d9b5ec-065d-44f6-9e42-8d93e7b8f9b2"
+  ],
+  "organizers": [],
+  "spectators": [],
+  "firstPlace": [
+    "80d9b5ec-065d-44f6-9e42-8d93e7b8f9b2"
+  ],
+  "secondPlace": [],
+  "thirdPlace": []
+}

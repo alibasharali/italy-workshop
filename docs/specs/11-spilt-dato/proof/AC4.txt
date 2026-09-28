@@ -1,0 +1,63 @@
+> POST /api/v1/games
+{
+  "tournamentId": "77496840-a5c8-4fde-904e-aef60e7b3ac9",
+  "name": "Boccia",
+  "gameType": "Standard",
+  "playedOn": "2026-03-13",
+  "occasion": "  Fredagspils uke 11 "
+}
+< 201
+"3093f3e4-1154-43ff-afa9-57b39989b298"
+
+> GET /api/v1/games/3093f3e4-1154-43ff-afa9-57b39989b298
+< 200
+{
+  "id": "3093f3e4-1154-43ff-afa9-57b39989b298",
+  "tournamentId": "77496840-a5c8-4fde-904e-aef60e7b3ac9",
+  "name": "Boccia",
+  "description": null,
+  "playedOn": "2026-03-13",
+  "occasion": "Fredagspils uke 11",
+  "isDone": false,
+  "gameType": "Standard",
+  "hasBanner": false,
+  "isOrganizersParticipating": false,
+  "participants": [],
+  "organizers": [],
+  "spectators": [],
+  "firstPlace": [],
+  "secondPlace": [],
+  "thirdPlace": []
+}
+
+> POST /api/v1/games
+{
+  "tournamentId": "77496840-a5c8-4fde-904e-aef60e7b3ac9",
+  "name": "Kubb",
+  "gameType": "Standard",
+  "playedOn": "2026-03-20",
+  "occasion": "   "
+}
+< 201
+"0da6f5c4-d579-47ed-8bef-fb8ce6faf5ff"
+
+> GET /api/v1/games/0da6f5c4-d579-47ed-8bef-fb8ce6faf5ff
+< 200
+{
+  "id": "0da6f5c4-d579-47ed-8bef-fb8ce6faf5ff",
+  "tournamentId": "77496840-a5c8-4fde-904e-aef60e7b3ac9",
+  "name": "Kubb",
+  "description": null,
+  "playedOn": "2026-03-20",
+  "occasion": null,
+  "isDone": false,
+  "gameType": "Standard",
+  "hasBanner": false,
+  "isOrganizersParticipating": false,
+  "participants": [],
+  "organizers": [],
+  "spectators": [],
+  "firstPlace": [],
+  "secondPlace": [],
+  "thirdPlace": []
+}

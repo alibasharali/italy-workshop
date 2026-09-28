@@ -1,0 +1,98 @@
+> GET /api/v1/games/60e6dd75-ce4e-4edb-a5fa-7b5077c6f8f3
+< 200
+{
+  "id": "60e6dd75-ce4e-4edb-a5fa-7b5077c6f8f3",
+  "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+  "name": "Shuffleboard",
+  "description": "Neste fredag. Ta med egne pucker om du har.",
+  "playedOn": null,
+  "occasion": null,
+  "isDone": false,
+  "gameType": "Standard",
+  "hasBanner": false,
+  "isOrganizersParticipating": false,
+  "participants": [
+    "7ef842de-9b6a-478e-aa9f-b68a366a0943",
+    "76055f2b-45f1-4850-9e39-caa7244b5661",
+    "04fbec88-57c2-4d08-a0ff-0186bdeb418c",
+    "9e3650c8-0f03-48ab-8165-e4b1fb5c444c"
+  ],
+  "organizers": [],
+  "spectators": [],
+  "firstPlace": [],
+  "secondPlace": [],
+  "thirdPlace": []
+}
+
+> PUT /api/v1/games/60e6dd75-ce4e-4edb-a5fa-7b5077c6f8f3
+{
+  "name": "Shuffleboard"
+}
+< 400
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "Game.PlayedOnMissing",
+  "status": 400,
+  "detail": "Spillet må ha en dato.",
+  "traceId": "00-50f303ccec683e245f8c0e33d0bdb275-2a8d0844ce53e997-01"
+}
+
+> GET /api/v1/games/60e6dd75-ce4e-4edb-a5fa-7b5077c6f8f3
+< 200
+{
+  "id": "60e6dd75-ce4e-4edb-a5fa-7b5077c6f8f3",
+  "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+  "name": "Shuffleboard",
+  "description": "Neste fredag. Ta med egne pucker om du har.",
+  "playedOn": null,
+  "occasion": null,
+  "isDone": false,
+  "gameType": "Standard",
+  "hasBanner": false,
+  "isOrganizersParticipating": false,
+  "participants": [
+    "7ef842de-9b6a-478e-aa9f-b68a366a0943",
+    "76055f2b-45f1-4850-9e39-caa7244b5661",
+    "04fbec88-57c2-4d08-a0ff-0186bdeb418c",
+    "9e3650c8-0f03-48ab-8165-e4b1fb5c444c"
+  ],
+  "organizers": [],
+  "spectators": [],
+  "firstPlace": [],
+  "secondPlace": [],
+  "thirdPlace": []
+}
+
+> PUT /api/v1/games/60e6dd75-ce4e-4edb-a5fa-7b5077c6f8f3
+{
+  "name": "Shuffleboard",
+  "description": null,
+  "playedOn": "2026-02-27"
+}
+< 204
+
+> GET /api/v1/games/60e6dd75-ce4e-4edb-a5fa-7b5077c6f8f3
+< 200
+{
+  "id": "60e6dd75-ce4e-4edb-a5fa-7b5077c6f8f3",
+  "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+  "name": "Shuffleboard",
+  "description": null,
+  "playedOn": "2026-02-27",
+  "occasion": null,
+  "isDone": false,
+  "gameType": "Standard",
+  "hasBanner": false,
+  "isOrganizersParticipating": false,
+  "participants": [
+    "7ef842de-9b6a-478e-aa9f-b68a366a0943",
+    "76055f2b-45f1-4850-9e39-caa7244b5661",
+    "04fbec88-57c2-4d08-a0ff-0186bdeb418c",
+    "9e3650c8-0f03-48ab-8165-e4b1fb5c444c"
+  ],
+  "organizers": [],
+  "spectators": [],
+  "firstPlace": [],
+  "secondPlace": [],
+  "thirdPlace": []
+}
