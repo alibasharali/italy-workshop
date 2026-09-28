@@ -81,11 +81,14 @@ jobs:
               If a check goes red, revert your change and treat the finding as Needs a human instead.
             - **Needs a human:** an inline comment on the right line with
               mcp__github_inline_comment__create_inline_comment: what is wrong and your recommended fix.
+              End every such comment with this line, verbatim:
+              «💬 Svar `@claude <hva du vil ha>` her for at Claude skal fikse det på branchen, eller fiks selv. Løs tråden når det er håndtert.»
 
             Finish with one PR comment (`gh pr comment`) in Norwegian:
             1. a verdict line: «Klar for merge» (nothing left for a human), «Må fikses» or «Trenger avklaring»
             2. «Fikset automatisk»: one line per fix, with the short commit SHA. Remind the author to `git pull`.
-            3. «Trenger et menneske»: one line per inline comment.
+            3. «Trenger et menneske»: one line per inline comment, then the line:
+               «Svar `@claude …` i tråden for at Claude skal fikse det. Et vanlig svar starter ingenting.»
             If you find nothing, say so in one sentence. Write all comments in Norwegian.
           claude_args: |
             --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Read,Grep,Glob,Edit,Write,Bash(git add:*),Bash(git commit:*),Bash(git push:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git checkout -- :*),Bash(dotnet restore:*),Bash(dotnet build:*),Bash(dotnet test:*),Bash(dotnet format:*),Bash(npm ci:*),Bash(npm run lint:*)"

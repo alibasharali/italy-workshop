@@ -51,7 +51,7 @@ Board: https://github.com/users/alibasharali/projects/2
    2. pushes
    3. opens the PR, which links the issue and spec and includes the proof and an "Open in Codespaces" link
    4. moves the card to *In review*
-7. **Review.** CI runs the checks and the Claude Code review action. The review follows `docs/agents/review-policy.md`: unambiguous findings are fixed and pushed as `fix(review): …` commits, and everything else becomes an unresolved thread that blocks the merge. The human tests in the Codespace (mock auth: already logged in as admin) and squash-merges. GitHub moves the card to *Done*.
+7. **Review.** CI runs the checks and the Claude Code review action. The review follows `docs/agents/review-policy.md`: unambiguous findings are fixed and pushed as `fix(review): …` commits, and everything else becomes an unresolved thread that blocks the merge. Reply `@claude <what you want>` in a thread to have Claude fix it on the branch; a plain reply triggers nothing. Only a human resolves the thread. The human tests in the Codespace (mock auth: already logged in as admin) and squash-merges. GitHub moves the card to *Done*.
 
 ## Guardrails
 

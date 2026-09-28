@@ -30,6 +30,14 @@ jobs:
         with:
           fetch-depth: 1
 
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
       - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@v1
@@ -40,11 +48,10 @@ jobs:
           additional_permissions: |
             actions: read
 
-          # Optional: Give a custom prompt to Claude. If this is not specified, Claude will perform the instructions specified in the comment that tagged it.
-          # prompt: 'Update the pull request description to include a summary of changes.'
-
-          # Optional: Add claude_args to customize behavior and configuration
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
-          # claude_args: '--allowed-tools Bash(gh pr *)'
+          # Ingen prompt: Claude gjør det som står i kommentaren med @claude.
+          # --append-system-prompt legger repoets regler oppå, uten å erstatte kommentaren.
+          # Verktøyene lar Claude verifisere egne endringer før den pusher.
+          claude_args: |
+            --allowedTools "Bash(dotnet restore:*),Bash(dotnet build:*),Bash(dotnet test:*),Bash(dotnet format:*),Bash(npm ci:*),Bash(npm run lint:*)"
+            --append-system-prompt "You work in a repo with a spec-driven agent workflow. Follow AGENTS.md (and any nested AGENTS.md or .claude/rules/ in the folders you touch) and docs/agents/workflow.md. Hard rules from docs/agents/review-policy.md: never change a test to make it pass; never edit the spec in docs/specs/, .github/workflows/, .claude/settings.json or .claude/hooks/. If the request would require that, explain why and stop. Before pushing, build and run the fast tests (Domain, Application, Architecture; plus npm run lint for frontend changes). Commit with a descriptive message, not prefixed fix(review):, so the review runs again. When you answer a review thread, say what you changed with the commit SHA, and remind the human to resolve the thread themselves. Write your replies in Norwegian."
 
