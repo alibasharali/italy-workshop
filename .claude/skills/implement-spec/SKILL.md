@@ -19,7 +19,7 @@ Use the `tdd` skill. The spec's *Test seams* table lists the pre-agreed seams, s
 For each slice:
 
 1. **Red:** write the test for the slice's next AC at its seam. Run it and watch it fail for the right reason.
-2. **Green:** write the least code that passes it. Follow `AGENTS.md`. In particular, when you add an entity or mapping, update `TestAppDbContext`. For a schema change, add a migration with the `dotnet ef` command in `AGENTS.md`.
+2. **Green:** write the least code that passes it. Follow `AGENTS.md`. In particular, when you add an entity or mapping, update `TestAppDbContext`. For a schema change, add a migration with `dotnet ef migrations add <Name> --project src/TronderLeikan.Infrastructure --startup-project src/TronderLeikan.Infrastructure`. It uses the design-time `AppDbContextFactory`, so no database has to be running.
 3. Repeat until every AC in the slice has a passing test, then run the whole affected test project.
 4. Commit as `feat(<area>): S<n> <slice name> (#<N>)`.
 
