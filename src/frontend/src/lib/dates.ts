@@ -24,3 +24,17 @@ export function todayInNorway(): string {
   const del = (type: string) => deler.find((d) => d.type === type)?.value;
   return `${del("year")}-${del("month")}-${del("day")}`;
 }
+
+// Kronologisk rekkefølge: dato stigende, så navn med norsk sortering (æ, ø, å),
+// og spill uten dato sist. API-et sorterer likt, men sammenligner navn uten norsk sortering.
+export function compareChronologically(
+  a: { playedOn: string | null; name: string },
+  b: { playedOn: string | null; name: string }
+): number {
+  if (a.playedOn !== b.playedOn) {
+    if (a.playedOn === null) return 1;
+    if (b.playedOn === null) return -1;
+    return a.playedOn < b.playedOn ? -1 : 1;
+  }
+  return a.name.localeCompare(b.name, "nb");
+}

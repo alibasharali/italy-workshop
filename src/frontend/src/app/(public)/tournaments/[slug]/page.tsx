@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { compareChronologically, formatPlayedOn } from "@/lib/dates";
 
 // Datamodell for turneringsdetaljer — tilsvarer API-respons fra /api/v1/tournaments/:slug
 type TournamentDetailResponse = {
@@ -27,6 +28,15 @@ type ScoreboardEntryResponse = {
   rank: number;
 };
 
+// Kortform av et spill — tilsvarer API-respons fra /api/v1/tournaments/:id/games
+type GameSummaryResponse = {
+  id: string;
+  name: string;
+  playedOn: string | null;
+  occasion: string | null;
+  isDone: boolean;
+};
+
 // Henter turneringsdetaljer via slug. Returnerer null ved feil eller manglende ressurs.
 async function getTournamentBySlug(
   slug: string
@@ -50,6 +60,20 @@ async function getScoreboard(
   try {
     const res = await fetch(
       `${process.env.API_BASE_URL ?? "http://localhost:5000"}/api/v1/tournaments/${id}/scoreboard`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
+  }
+}
+
+// Henter spillene i turneringen. Returnerer tomt array ved feil.
+async function getGames(id: string): Promise<GameSummaryResponse[]> {
+  try {
+    const res = await fetch(
+      `${process.env.API_BASE_URL ?? "http://localhost:5000"}/api/v1/tournaments/${id}/games`,
       { cache: "no-store" }
     );
     if (!res.ok) return [];
@@ -119,8 +143,12 @@ export default async function TournamentDetailPage({
   const tournament = await getTournamentBySlug(slug);
   if (!tournament) notFound();
 
-  // Hent scoreboard parallelt med at turnerings-data allerede er tilgjengelig
-  const scoreboard = await getScoreboard(tournament.id);
+  // Hent scoreboard og spill parallelt
+  const [scoreboard, games] = await Promise.all([
+    getScoreboard(tournament.id),
+    getGames(tournament.id),
+  ]);
+  const sortedGames = games.slice().sort(compareChronologically);
 
   const { pointRules } = tournament;
 
@@ -212,6 +240,49 @@ export default async function TournamentDetailPage({
           )}
         </section>
       </div>
+
+      {/* Sesongen fra første til siste kveld */}
+      <section aria-labelledby="games-heading" className="mt-8">
+        <h2 id="games-heading" className="text-lg font-semibold mb-2">
+          Spill
+        </h2>
+
+        {sortedGames.length === 0 ? (
+          <p className="text-gray-500">Ingen spill registrert ennå.</p>
+        ) : (
+          <ol className="border border-gray-200 rounded">
+            {sortedGames.map((game) => (
+              <li
+                key={game.id}
+                className="border-b border-gray-200 last:border-b-0"
+              >
+                <Link
+                  href={`/tournaments/${tournament.slug}/games/${game.id}`}
+                  className="flex flex-wrap items-center gap-x-2 gap-y-1 p-3 text-sm hover:bg-gray-50"
+                >
+                  <span className="text-gray-600">
+                    {formatPlayedOn(game.playedOn)}
+                  </span>
+                  {game.occasion && (
+                    <>
+                      <span className="text-gray-400">·</span>
+                      <span className="text-gray-600">{game.occasion}</span>
+                    </>
+                  )}
+                  <span className="text-gray-400">·</span>
+                  <span className="font-medium underline">{game.name}</span>
+                  <span className="text-gray-400">·</span>
+                  <span
+                    className={game.isDone ? "text-green-700" : "text-gray-500"}
+                  >
+                    {game.isDone ? "Ferdig" : "Ikke ferdig"}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
     </div>
   );
 }

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { formatPlayedOn, todayInNorway } from "@/lib/dates";
+import {
+  compareChronologically,
+  formatPlayedOn,
+  todayInNorway,
+} from "@/lib/dates";
 import { occasionSuggestions } from "@/lib/occasions";
 import { updatePointRulesAction, createGameAction } from "./actions";
 
@@ -99,18 +103,7 @@ export default async function AdminTournamentDetailPage({ params }: Props) {
   // Hjelpefunksjon — genererer bundet Server Action for opprett spill
   const createGame = createGameAction.bind(null, tournament.id, tournament.slug);
 
-  // Kronologisk: dato stigende, så navn, spill uten dato sist. API-et sorterer
-  // på samme måte, men navn sammenlignes her med norsk sortering (æ, ø, å).
-  const sortedGames = games
-    .slice()
-    .sort((a, b) => {
-      if (a.playedOn !== b.playedOn) {
-        if (a.playedOn === null) return 1;
-        if (b.playedOn === null) return -1;
-        return a.playedOn < b.playedOn ? -1 : 1;
-      }
-      return a.name.localeCompare(b.name, "nb");
-    });
+  const sortedGames = games.slice().sort(compareChronologically);
 
   const suggestions = occasionSuggestions(sortedGames);
 
