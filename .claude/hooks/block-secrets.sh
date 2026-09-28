@@ -11,7 +11,7 @@ if printf '%s' "$cmd" | grep -Eq "$pattern"; then
     hookSpecificOutput: {
       hookEventName: "PreToolUse",
       permissionDecision: "deny",
-      permissionDecisionReason: "Blokkert av .claude/hooks/block-secrets.sh: kommandoen berører hemmeligheter (zitadel-bootstrap/, user secrets eller .env). Agenten skal aldri lese disse. Trenger du en verdi, be brukeren om den."
+      permissionDecisionReason: "Blokkert av .claude/hooks/block-secrets.sh: kommandoen berører hemmeligheter (zitadel-bootstrap/, user secrets eller .env). Agenten skal aldri lese disse. Trenger du en verdi, be brukeren om den. Nevner kommandoen bare stien som tekst (commit-melding, PR- eller issue-tekst): skriv teksten til en fil og bruk git commit -F <fil> eller gh … --body-file <fil>."
     }
   }'
 fi
