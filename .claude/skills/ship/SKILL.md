@@ -27,14 +27,25 @@ Classify every finding with `docs/agents/review-policy.md`:
 
 Done when no finding is open.
 
-## 4. Open the PR
+## 4. Retro
+
+Look back over the story, in this session and in the branch's commits and review threads. Collect every **correction**:
+- a place where the developer corrected you or had to explain something
+- a place where you searched long for something that should have been written down
+- a mistake that a hook, CI or the review caught
+
+Run the `lesson` skill on each one that doesn't already have a `chore(lesson)` commit.
+
+Done when every correction is either a `chore(lesson)` commit or judged a one-off, with the reason.
+
+## 5. Open the PR
 
 1. `git push -u origin HEAD`
 2. Fill in [pr-template.md](pr-template.md), in Norwegian because humans read it, and create the PR: `gh pr create --title "feat: <issue title> (#<N>)" --body-file <file>`.
    - `Closes #<N>` moves the card to *In review* through the board's automation.
 3. Check the card. If it is not in *In review* after a minute, run `.claude/scripts/board-status.sh <N> "In review"`.
 
-## 5. Hand over
+## 6. Hand over
 
 Watch CI in the background with `gh pr checks <PR> --watch`. When it finishes, give the user:
 

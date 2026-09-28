@@ -48,10 +48,15 @@ Board: https://github.com/users/alibasharali/projects/2
    Green tests alone are not done.
 6. **Ship.** `/ship`:
    1. runs `/code-review` in a fresh subagent and fixes its findings
-   2. pushes
-   3. opens the PR, which links the issue and spec and includes the proof and the steps to test it locally
-   4. moves the card to *In review*
+   2. runs a **retro**: every correction during the story goes through the `lesson` skill and becomes a rule, test, hook, ADR or skill in the same PR (*Lærdom*), or is judged a one-off
+   3. pushes
+   4. opens the PR, which links the issue and spec and includes the proof and the steps to test it locally
+   5. moves the card to *In review*
 7. **Review.** CI runs the checks and the Claude Code review action. The review follows `docs/agents/review-policy.md`: unambiguous findings are fixed and pushed as `fix(review): …` commits, and everything else becomes an unresolved thread that blocks the merge. Reply `@claude <what you want>` in a thread to have Claude fix it on the branch; a plain reply triggers nothing. Only a human resolves the thread. The human checks out the PR (`gh pr checkout <PR>`) in the main clone, runs the AppHost, tests it, and squash-merges. GitHub moves the card to *Done*.
+
+## Learning loop
+
+A mistake becomes a guardrail through the `lesson` skill. It runs when the developer corrects the agent, and on every story in the `/ship` retro. The lesson lands in the repo (rule, test, hook, ADR, skill or script), never in personal memory, so every developer's agent learns it.
 
 ## Guardrails
 

@@ -6,6 +6,8 @@ TrønderLeikan: a points/scoreboard system for informal company competitions. Do
 
 All work follows the story → spec → PR workflow in `docs/agents/workflow.md`. Read it before starting on a story.
 
+When you are corrected about how this repo works, use the `lesson` skill so the fix lands in the repo for the whole team. Personal memory is for the user's personal preferences only.
+
 ## Commands
 
 ```bash
