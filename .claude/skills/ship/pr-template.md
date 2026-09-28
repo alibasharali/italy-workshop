@@ -24,6 +24,10 @@ dotnet run --project src/TronderLeikan.AppHost
 
 <Stegene for å prøve storyen, fra forsiden.>
 
+## Lærdom
+
+<Én linje per `chore(lesson)`-commit: hva agenten gjorde feil, og hvor lærdommen ligger nå (regel, test, hook, ADR eller skill). Legg til engangsfeil med én linje om hvorfor de ikke ble en regel. Skriv «Ingen korreksjoner» hvis det ikke var noen.>
+
 ## Kjente avveininger
 
 <Vurderinger fra reviewen du bevisst lot stå, med én linje om hvorfor. Skriv «Ingen» hvis det ikke er noen.>
