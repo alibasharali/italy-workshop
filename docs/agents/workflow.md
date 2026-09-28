@@ -29,7 +29,7 @@ Board: https://github.com/users/alibasharali/projects/2
 ## Steps
 
 1. **Pick.** `/story <issue>` creates the branch and moves the card to *Spec*.
-2. **Spec.** The agent reads the issue and the relevant code, then grills the developer on every open decision, giving its recommendation each time. It writes the spec, including:
+2. **Spec** (`write-spec`). The agent reads the issue and the relevant code, then grills the developer on every open decision, giving its recommendation each time. It writes the spec, including:
    - the domain decisions
    - acceptance criteria
    - vertical slices
@@ -39,11 +39,11 @@ Board: https://github.com/users/alibasharali/projects/2
 
    The spec is committed on the branch.
 3. **Gate.** The developer reads the spec and sets `status: approved`. **No production code is written before this.** This is the only human gate before the PR, so it's where core-domain judgement happens.
-4. **Implement.** The card moves to *In progress*. The agent implements one slice at a time with TDD (red, then green), and commits per slice. It uses the conventions in `AGENTS.md` and `.claude/rules/`.
+4. **Implement** (`implement-spec`). The card moves to *In progress*. The agent implements one slice at a time with TDD (red, then green), and commits per slice. It uses the conventions in `AGENTS.md` and `.claude/rules/`.
 5. **Prove.** Before shipping:
    - build, all tests, lint and format are green
    - every acceptance criterion is demonstrated against the running app, with Playwright or API calls
-   - screenshots are saved for the PR
+   - evidence is saved in `docs/specs/<N>-<slug>/proof/` and linked from the PR
 
    Green tests alone are not done.
 6. **Ship.** `/ship`:
