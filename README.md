@@ -140,7 +140,8 @@ pwsh -ExecutionPolicy Bypass -File .\reset-local.ps1  # Windows (PowerShell 7)
 
 ```bash
 gh pr checkout <PR-nummer>
-Auth__Mode=mock dotnet run --project src/TronderLeikan.AppHost
+Auth__Mode=mock dotnet run --project src/TronderLeikan.AppHost                 # macOS / Linux
+$env:Auth__Mode="mock"; dotnet run --project src/TronderLeikan.AppHost         # Windows (PowerShell 7)
 ```
 
 Med `Auth__Mode=mock` kjører ikke Zitadel. Du er allerede logget inn som «Demo-admin» på `/admin`, og frontend ligger på <http://localhost:3000>, så porten må være ledig. Uten variabelen kjører alt som vanlig, med innlogging.

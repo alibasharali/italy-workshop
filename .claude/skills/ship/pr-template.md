@@ -17,7 +17,9 @@ Closes #<N>
 ```bash
 gh pr checkout <PR>
 dotnet run --project src/TronderLeikan.AppHost
-# raskere, uten Zitadel og innlogging: Auth__Mode=mock dotnet run --project src/TronderLeikan.AppHost
+# raskere, uten Zitadel og innlogging:
+#   macOS/Linux: Auth__Mode=mock dotnet run --project src/TronderLeikan.AppHost
+#   PowerShell:  $env:Auth__Mode="mock"; dotnet run --project src/TronderLeikan.AppHost
 ```
 
 <Stegene for å prøve storyen, fra forsiden.>
