@@ -59,6 +59,6 @@ Board: https://github.com/users/alibasharali/projects/2
 |---|---|
 | Code | tests, `dotnet format`, eslint, architecture tests (layer dependencies), build |
 | Harness (`.claude/settings.json`, shared) | deny reading secrets (`zitadel-bootstrap/`, user secrets, `.env`); Stop hook runs build + tests; format after every edit |
-| Process (GitHub) | `main` only changes via PR; required CI checks; AI review; squash-merge only |
+| Process (GitHub) | ruleset "main: kun via PR": PR required, CI jobs `Backend (.NET)` and `Frontend (Node)` must be green, all review threads resolved, squash-merge only, no force-push/deletion; merged branches are deleted |
 
 CI is the enforcement that applies to everyone. Claude hooks catch problems earlier, inside agent sessions.
