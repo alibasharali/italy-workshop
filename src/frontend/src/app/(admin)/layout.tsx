@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { getSession, isMockAuth } from "@/lib/session";
 import { LogoutButton } from "@/components/LogoutButton";
 import type { Metadata } from "next";
 
@@ -25,7 +25,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   // Sjekker sesjon på serveren - better-auth leser cookie fra request-headers
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession(await headers());
 
   if (!session) {
     redirect("/login");
@@ -49,7 +49,7 @@ export default async function AdminLayout({
         </nav>
         <div className="flex items-center gap-3 text-sm">
           <span className="text-gray-600">{displayName}</span>
-          <LogoutButton />
+          {!isMockAuth && <LogoutButton />}
         </div>
       </div>
       {children}
