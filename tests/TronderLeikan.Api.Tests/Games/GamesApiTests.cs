@@ -250,4 +250,59 @@ public class GamesApiTests(TronderLeikanApiFactory factory)
         var body = await response.Content.ReadFromJsonAsync<JsonElement>();
         body.GetProperty("title").GetString().Should().Be("Game.OccasionTooLong");
     }
+
+    // Hjelper — oppretter et datert spill uten anledning og returnerer id
+    private async Task<Guid> OpprettSpill(string navn, string playedOn) =>
+        await (await _client.PostAsJsonAsync("/api/v1/games",
+            new { tournamentId = await OpprettTurnering(), name = navn, playedOn }))
+            .Content.ReadFromJsonAsync<Guid>();
+
+    [Fact]
+    public async Task PUT_game_erstatter_navn_beskrivelse_dato_og_anledning()
+    {
+        var id = await OpprettSpill("Dart", "2026-03-13");
+
+        var response = await _client.PutAsJsonAsync($"/api/v1/games/{id}", new
+        {
+            name = "Dart 501",
+            description = "Dobbel ut",
+            playedOn = "2026-03-20",
+            occasion = "Fredagspils uke 12"
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        var body = await (await _client.GetAsync($"/api/v1/games/{id}")).Content.ReadFromJsonAsync<JsonElement>();
+        body.GetProperty("name").GetString().Should().Be("Dart 501");
+        body.GetProperty("description").GetString().Should().Be("Dobbel ut");
+        body.GetProperty("playedOn").GetString().Should().Be("2026-03-20");
+        body.GetProperty("occasion").GetString().Should().Be("Fredagspils uke 12");
+    }
+
+    [Fact]
+    public async Task PUT_game_uten_dato_returnerer_400_og_endrer_ingenting()
+    {
+        var id = await OpprettSpill("Dart", "2026-03-13");
+
+        var response = await _client.PutAsJsonAsync($"/api/v1/games/{id}", new { name = "Endret" });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var problem = await response.Content.ReadFromJsonAsync<JsonElement>();
+        problem.GetProperty("title").GetString().Should().Be("Game.PlayedOnMissing");
+        var body = await (await _client.GetAsync($"/api/v1/games/{id}")).Content.ReadFromJsonAsync<JsonElement>();
+        body.GetProperty("name").GetString().Should().Be("Dart");
+        body.GetProperty("playedOn").GetString().Should().Be("2026-03-13");
+    }
+
+    [Fact]
+    public async Task PUT_game_med_for_lang_anledning_returnerer_400()
+    {
+        var id = await OpprettSpill("Dart", "2026-03-13");
+
+        var response = await _client.PutAsJsonAsync($"/api/v1/games/{id}",
+            new { name = "Dart", playedOn = "2026-03-13", occasion = new string('a', 201) });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var problem = await response.Content.ReadFromJsonAsync<JsonElement>();
+        problem.GetProperty("title").GetString().Should().Be("Game.OccasionTooLong");
+    }
 }

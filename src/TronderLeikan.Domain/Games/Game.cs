@@ -83,6 +83,8 @@ public sealed class Game : Entity
     public void RemoveBanner() => HasBanner = false;
     public void UpdateDescription(string? description) => Description = description;
     public void UpdateLocation(string? location) => Location = location;
+    // Datoen kan endres, men ikke fjernes
+    public void UpdatePlayedOn(DateOnly playedOn) => PlayedOn = playedOn;
 
     // Mellomrom rundt fjernes, og tom tekst betyr ingen anledning
     public void UpdateOccasion(string? occasion) =>

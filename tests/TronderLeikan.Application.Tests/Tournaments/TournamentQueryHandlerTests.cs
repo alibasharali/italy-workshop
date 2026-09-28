@@ -1,3 +1,5 @@
+using AwesomeAssertions;
+using TronderLeikan.Application.Games.Commands.UpdateGame;
 using TronderLeikan.Application.Tournaments.Queries.GetScoreboard;
 using TronderLeikan.Application.Tournaments.Queries.GetTournamentBySlug;
 using TronderLeikan.Application.Tournaments.Queries.GetTournaments;
@@ -58,5 +60,29 @@ public sealed class TournamentQueryHandlerTests
         Assert.Equal(5, kari.TotalPoints);
         Assert.Equal(1, ola.Rank);
         Assert.Equal(2, kari.Rank);
+    }
+
+    [Fact]
+    public async Task GetScoreboard_UendretNårDatoOgAnledningEndres()
+    {
+        await using var db = TestAppDbContext.Create();
+        var tournament = Tournament.Create("NM", "nm");
+        db.Tournaments.Add(tournament);
+        var ola = Person.Create("Ola", "Nordmann");
+        var kari = Person.Create("Kari", "Traa");
+        db.Persons.AddRange(ola, kari);
+        var game = Game.Create("Dart", tournament.Id, new DateOnly(2026, 3, 13));
+        game.AddParticipant(ola.Id);
+        game.AddParticipant(kari.Id);
+        game.Complete([ola.Id], [kari.Id], []);
+        db.Games.Add(game);
+        await db.SaveChangesAsync();
+        var før = (await new GetScoreboardQueryHandler(db).Handle(new GetScoreboardQuery(tournament.Id))).Value!;
+
+        await new UpdateGameCommandHandler(db).Handle(
+            new UpdateGameCommand(game.Id, "Dart", null, new DateOnly(2025, 12, 31), "Julebord"));
+        var etter = (await new GetScoreboardQueryHandler(db).Handle(new GetScoreboardQuery(tournament.Id))).Value!;
+
+        etter.Should().BeEquivalentTo(før);
     }
 }

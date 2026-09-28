@@ -13,6 +13,8 @@ public sealed class UpdateGameCommandHandler(IAppDbContext db)
         if (game is null) return GameErrors.NotFound;
         game.UpdateName(command.Name);
         game.UpdateDescription(command.Description);
+        game.UpdatePlayedOn(command.PlayedOn!.Value);
+        game.UpdateOccasion(command.Occasion);
         await db.SaveChangesAsync(ct);
         return Result.Success();
     }

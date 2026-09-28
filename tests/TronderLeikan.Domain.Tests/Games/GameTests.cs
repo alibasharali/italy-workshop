@@ -43,6 +43,16 @@ public class GameTests
     }
 
     [Fact]
+    public void UpdatePlayedOn_EndrerDato()
+    {
+        var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
+
+        game.UpdatePlayedOn(new DateOnly(2026, 3, 20));
+
+        game.PlayedOn.Should().Be(new DateOnly(2026, 3, 20));
+    }
+
+    [Fact]
     public void UpdateOccasion_FjernerMellomromRundt()
     {
         var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
