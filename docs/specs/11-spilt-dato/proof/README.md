@@ -12,7 +12,7 @@ API-filene inneholder hele forespørselen (`>`) og svaret (`<`).
 | AC5 | [AC5.txt](AC5.txt) | 201 tegn gir 400 `Game.OccasionTooLong` ved både POST og PUT. 200 tegn gir 201. |
 | AC6 | [AC6.txt](AC6.txt) | `PUT /games/{id}` gir 204, og `GET` viser nytt navn, beskrivelse, dato og anledning. |
 | AC7 | [AC7.txt](AC7.txt) | Et seedet spill uten dato: PUT uten dato gir 400 og spillet er uendret. PUT med 2026-02-27 gir 204 og datoen er satt. |
-| AC8 | [AC8.txt](AC8.txt), [AC10-liste.png](AC10-liste.png), [AC13.png](AC13.png) | API-et returnerer Mario Kart, Boccia, Dart. Admin- og offentlig liste viser samme kronologiske rekkefølge. |
+| AC8 | [AC8.txt](AC8.txt), [AC10-liste.png](AC10-liste.png), [AC13.png](AC13.png) | API-et returnerer Mario Kart, Boccia, Dart. I en turnering med eldre spill står spillene uten dato sist. Admin- og offentlig liste viser samme kronologiske rekkefølge. Et spill uten dato kan ikke lages gjennom API-et, så hele AC8-oppsettet med «Kubb» er dekket av handlertesten `GetGamesByTournament_SortererKronologiskMedUdaterteSist`. |
 | AC9 | [AC1.txt](AC1.txt), [AC8.txt](AC8.txt) | Både detalj og sammendrag har `playedOn` og `occasion`. |
 | AC10 | [AC10-skjema.png](AC10-skjema.png), [AC10-liste.png](AC10-liste.png) | Datofeltet er forhåndsutfylt med dagens dato (28.09.2026). «Dart» ble opprettet fra skjemaet med 13. mars og «Fredagspils uke 11», og står i lista som `13. mars 2026 · Fredagspils uke 11`. |
 | AC11 | [AC11.txt](AC11.txt) | Både opprett- og redigeringsskjemaet foreslår nøyaktig «Fredagspils uke 11» og «Fredagspils uke 12», og ikke anledningen fra en annen turnering. |
@@ -20,7 +20,7 @@ API-filene inneholder hele forespørselen (`>`) og svaret (`<`).
 | AC13 | [AC13.png](AC13.png), [AC13-uten-dato.png](AC13-uten-dato.png) | Den offentlige spillisten viser dato, anledning, navn og status med lenke til spillet, og «Dato ikke satt» sist for eldre spill. |
 | AC14 | [AC14-offentlig.png](AC14-offentlig.png), [AC12-etter-lagring.png](AC12-etter-lagring.png) | Den offentlige og den administrative spillsiden viser dato og anledning. |
 | AC15 | [AC15.txt](AC15.txt) | Scoreboardet er identisk før og etter at dato og anledning endres på et fullført spill. |
-| AC16 | [AC16.txt](AC16.txt), [AC13-uten-dato.png](AC13-uten-dato.png) | Alle seedede spill fra før migreringen lastes med `playedOn: null` og `occasion: null`, og står sist. |
+| AC16 | [AC16.txt](AC16.txt), [AC13-uten-dato.png](AC13-uten-dato.png) | Alle seedede spill fra før migreringen lastes med `playedOn: null` og `occasion: null`. Når ett av dem har fått dato, står resten sist. |
 
 ## Merknader
 

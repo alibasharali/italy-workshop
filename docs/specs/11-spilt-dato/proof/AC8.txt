@@ -32,3 +32,39 @@
     "gameType": "Standard"
   }
 ]
+
+# Turnering med både daterte og eldre spill uten dato (Fredagspils 2026 fra demodataene, etter AC7)
+> GET /api/v1/tournaments/b287b099-8e7f-4a0a-8e4e-b57d222adfb8/games
+< 200
+[
+    {
+        "id": "60e6dd75-ce4e-4edb-a5fa-7b5077c6f8f3",
+        "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+        "name": "Shuffleboard",
+        "location": "Kontoret, kjøkkenet",
+        "playedOn": "2026-02-27",
+        "occasion": null,
+        "isDone": false,
+        "gameType": "Standard"
+    },
+    {
+        "id": "5c7761b6-8b11-421f-bf95-3d357eb95bd6",
+        "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+        "name": "Dart",
+        "location": "Kontoret, kjøkkenet",
+        "playedOn": null,
+        "occasion": null,
+        "isDone": true,
+        "gameType": "Standard"
+    },
+    {
+        "id": "83ce4bb3-97f0-4490-9973-cd9dac21613b",
+        "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+        "name": "Mario Kart",
+        "location": "Kontoret, sofakroken",
+        "playedOn": null,
+        "occasion": null,
+        "isDone": true,
+        "gameType": "Standard"
+    }
+]
