@@ -1,27 +1,25 @@
 name: Claude Code Review
 
+# Uavhengig AI-review på hver PR, mot repoets egne regler og storyens spec.
+# Ikke en påkrevd sjekk (kvote/nedetid skal ikke blokkere merge), men rulesettet
+# krever at alle review-tråder er løst, så funnene må håndteres.
+# NB: claude-code-action nekter å kjøre hvis en PR endrer denne filen — endre den i en egen PR.
+
 on:
   pull_request:
     types: [opened, synchronize, ready_for_review, reopened]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
+
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
-
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write
       issues: read
       id-token: write
 
@@ -32,14 +30,35 @@ jobs:
           fetch-depth: 1
 
       - name: Run Claude Code Review
-        id: claude-review
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
-          plugins: 'code-review@claude-code-plugins'
-          prompt: '/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
-          claude_args: '--allowedTools "mcp__github_inline_comment__create_inline_comment"'
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
 
+            You are the independent reviewer for a team that works spec-driven with AI agents.
+            Read the diff with `gh pr diff` and the description with `gh pr view` first.
+
+            The rules you review against, in this order:
+            1. `AGENTS.md` and any `AGENTS.md` / `.claude/rules/*.md` in the folders the diff touches.
+            2. `docs/agents/workflow.md`: the definition of done and the guardrails.
+            3. The story's spec, if the PR links one (`docs/specs/<issue>-*.md`): acceptance criteria,
+               domain decisions and "Out of scope". Check that every acceptance criterion is implemented
+               and tested, and that nothing out of scope has been built.
+
+            Report only real, specific problems that you are confident about:
+            - correctness bugs and unhandled edge cases (e.g. ties/shared placements, empty lists, 404/409 paths)
+            - breaches of the documented conventions (Result/Error instead of exceptions, handlers via
+              ISender, IAppDbContext rather than AppDbContext, TestAppDbContext updated with new mappings)
+            - security: secrets in code or logs, missing input validation, admin actions without protection
+            - missing tests for new behaviour, or tests changed to make them pass
+            Do NOT comment on formatting (the formatter and CI handle that), taste, or things that are
+            already fine. No praise, no summaries of what the code does.
+
+            Write inline comments on the right line with mcp__github_inline_comment__create_inline_comment.
+            Finish with one PR comment (`gh pr comment`) in Norwegian: a verdict line
+            («Klar for merge», «Må fikses» or «Trenger avklaring»), then the findings as a short list.
+            If you find nothing, say so in one sentence. Write all comments in Norwegian.
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Read,Grep,Glob"
