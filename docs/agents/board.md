@@ -29,4 +29,6 @@ gh project item-edit --id "$ITEM" \
 
 Built-in workflows on the board: new items → Backlog; auto-add is limited to `is:issue label:story`, so PRs never become cards.
 
+Move a card with `.claude/scripts/board-status.sh <N> "<status>"`.
+
 To add a new story: `gh issue create --label story --label "tema: …"`, then `gh project item-add 2 --owner alibasharali --url <issue url>` and set it to Backlog.
