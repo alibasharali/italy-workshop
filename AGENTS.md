@@ -26,6 +26,8 @@ Aspire (`src/TronderLeikan.AppHost/AppHost.cs`) starts, in order: Postgres (pers
 
 ## Backend architecture (.NET 10, Clean Architecture)
 
+The detailed conventions load automatically from `.claude/rules/` (backend, tests, frontend). The reasons behind the architecture are in `docs/adr/`. Read the relevant ADR before proposing to change a pattern.
+
 `Domain` ← `Application` ← `Infrastructure` ← `API` / `DbMigrator`. `ServiceDefaults` holds the Aspire telemetry and health setup.
 
 - **Domain**: entities derive from `Entity` (Guid `Id` + domain events via `AddDomainEvent`). Entities use factory methods (`Game.Create`, `Person.Create`) and private setters. `Game` keeps its participant, organizer, spectator and placement lists in private backing fields (`_participants` and so on). `TournamentPointRules` is an owned value object on `Tournament`.
