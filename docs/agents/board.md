@@ -24,7 +24,9 @@ gh project item-edit --id "$ITEM" \
 | Backlog | `849fe02f` | default for new stories |
 | Spec | `a3697db7` | `/story` when the branch is created |
 | In progress | `6280f8d8` | once the spec is `status: approved` |
-| In review | `3a8e1899` | `/ship` when the PR is opened |
-| Done | `b3e7e3dc` | GitHub's built-in project workflow when the PR is merged |
+| In review | `3a8e1899` | GitHub workflow "Pull request linked to issue" when the PR body says `Closes #N`; `/ship` sets it only if that didn't happen |
+| Done | `b3e7e3dc` | GitHub workflows "Pull request merged" / "Item closed" |
+
+Built-in workflows on the board: new items → Backlog; auto-add is limited to `is:issue label:story`, so PRs never become cards.
 
 To add a new story: `gh issue create --label story --label "tema: …"`, then `gh project item-add 2 --owner alibasharali --url <issue url>` and set it to Backlog.
