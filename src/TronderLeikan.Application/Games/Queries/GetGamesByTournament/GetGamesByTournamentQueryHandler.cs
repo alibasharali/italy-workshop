@@ -16,8 +16,11 @@ public sealed class GetGamesByTournamentQueryHandler(IAppDbContext db)
 
         return await db.Games
             .Where(g => g.TournamentId == query.TournamentId)
-            .OrderBy(g => g.Name)
-            .Select(g => new GameSummaryResponse(g.Id, g.TournamentId, g.Name, g.Location, g.IsDone, g.GameType))
+            // Kronologisk, spill uten dato sist
+            .OrderBy(g => g.PlayedOn == null)
+            .ThenBy(g => g.PlayedOn)
+            .ThenBy(g => g.Name)
+            .Select(g => new GameSummaryResponse(g.Id, g.TournamentId, g.Name, g.Location, g.PlayedOn, g.IsDone, g.GameType))
             .ToArrayAsync(ct);
     }
 }

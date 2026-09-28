@@ -1,3 +1,4 @@
+using AwesomeAssertions;
 using TronderLeikan.Application.Games.Commands.AddParticipant;
 using TronderLeikan.Application.Games.Commands.CompleteGame;
 using TronderLeikan.Application.Games.Commands.CreateGame;
@@ -16,7 +17,7 @@ public sealed class GameCommandHandlerTests
         var tournament = Tournament.Create("NM", "nm");
         db.Tournaments.Add(tournament);
         await db.SaveChangesAsync();
-        var result = await new CreateGameCommandHandler(db).Handle(new CreateGameCommand(tournament.Id, "Dartspill", GameType.Standard));
+        var result = await new CreateGameCommandHandler(db).Handle(new CreateGameCommand(tournament.Id, "Dartspill", GameType.Standard, new DateOnly(2026, 3, 13)));
         Assert.True(result.IsSuccess);
         Assert.Single(db.Games.ToList());
     }
@@ -25,7 +26,7 @@ public sealed class GameCommandHandlerTests
     public async Task AddParticipant_LeggerTilDeltaker()
     {
         await using var db = TestAppDbContext.Create();
-        var game = Game.Create("Spill", Guid.NewGuid());
+        var game = Game.Create("Spill", Guid.NewGuid(), new DateOnly(2026, 3, 13));
         db.Games.Add(game);
         var person = Person.Create("Ola", "Nordmann");
         db.Persons.Add(person);
@@ -43,7 +44,7 @@ public sealed class GameCommandHandlerTests
         var personA = Person.Create("A", "A");
         var personB = Person.Create("B", "B");
         db.Persons.AddRange(personA, personB);
-        var game = Game.Create("Spill", Guid.NewGuid());
+        var game = Game.Create("Spill", Guid.NewGuid(), new DateOnly(2026, 3, 13));
         db.Games.Add(game);
         await db.SaveChangesAsync();
         var result = await new CompleteGameCommandHandler(db).Handle(new CompleteGameCommand(game.Id, [personA.Id], [personB.Id], []));
@@ -51,5 +52,43 @@ public sealed class GameCommandHandlerTests
         var updated = await db.Games.FindAsync(game.Id);
         Assert.True(updated!.IsDone);
         Assert.Contains(personA.Id, updated.FirstPlace);
+    }
+
+    [Fact]
+    public async Task CreateGame_LagrerSpiltDato()
+    {
+        await using var db = TestAppDbContext.Create();
+        var tournament = Tournament.Create("NM", "nm");
+        db.Tournaments.Add(tournament);
+        await db.SaveChangesAsync();
+
+        var result = await new CreateGameCommandHandler(db).Handle(
+            new CreateGameCommand(tournament.Id, "Dart", GameType.Standard, new DateOnly(2026, 3, 13)));
+
+        result.IsSuccess.Should().BeTrue();
+        var game = await db.Games.FindAsync(result.Value);
+        game!.PlayedOn.Should().Be(new DateOnly(2026, 3, 13));
+    }
+
+    [Fact]
+    public void CreateGameValidator_UtenDato_GirValideringsfeilPåPlayedOn()
+    {
+        var command = new CreateGameCommand(Guid.NewGuid(), "Dart", GameType.Standard, null);
+
+        var result = new CreateGameCommandValidator().Validate(command);
+
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().ContainSingle(e => e.PropertyName == "PlayedOn")
+            .Which.ErrorCode.Should().Be("Game.PlayedOnMissing");
+    }
+
+    [Fact]
+    public void CreateGameValidator_MedDatoIFremtiden_ErGyldig()
+    {
+        var command = new CreateGameCommand(Guid.NewGuid(), "Dart", GameType.Standard, new DateOnly(2027, 1, 1));
+
+        var result = new CreateGameCommandValidator().Validate(command);
+
+        result.IsValid.Should().BeTrue();
     }
 }

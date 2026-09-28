@@ -3,4 +3,5 @@ using TronderLeikan.Domain.Games;
 
 namespace TronderLeikan.Application.Games.Commands.CreateGame;
 
-public record CreateGameCommand(Guid TournamentId, string Name, GameType GameType) : ICommand<Guid>;
+// PlayedOn er nullable slik at validatoren, ikke modellbindingen, avviser et manglende felt
+public record CreateGameCommand(Guid TournamentId, string Name, GameType GameType, DateOnly? PlayedOn) : ICommand<Guid>;

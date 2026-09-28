@@ -41,7 +41,7 @@ public sealed class TournamentQueryHandlerTests
         var personKari = Person.Create("Kari", "Traa");
         db.Persons.AddRange(personOla, personKari);
         // Ola 1. plass, Kari 2. plass — begge deltakere
-        var game = Game.Create("Spill 1", tournament.Id);
+        var game = Game.Create("Spill 1", tournament.Id, new DateOnly(2026, 3, 13));
         game.AddParticipant(personOla.Id);
         game.AddParticipant(personKari.Id);
         game.Complete([personOla.Id], [personKari.Id], []);

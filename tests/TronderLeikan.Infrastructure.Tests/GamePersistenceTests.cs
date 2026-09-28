@@ -42,7 +42,7 @@ public sealed class GamePersistenceTests : IAsyncLifetime
         var alice = Guid.NewGuid();
         var bob = Guid.NewGuid();
 
-        var game = Game.Create("Kubb", tournamentId);
+        var game = Game.Create("Kubb", tournamentId, new DateOnly(2026, 3, 13));
         game.AddParticipant(alice);
         game.AddParticipant(bob);
 
@@ -67,7 +67,7 @@ public sealed class GamePersistenceTests : IAsyncLifetime
         var bob = Guid.NewGuid();
         var charlie = Guid.NewGuid();
 
-        var game = Game.Create("Dart", Guid.NewGuid());
+        var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
         game.Complete(
             firstPlace: [alice],
             secondPlace: [bob],
@@ -101,5 +101,39 @@ public sealed class GamePersistenceTests : IAsyncLifetime
 
         lagretTournament!.PointRules.Participation.Should().Be(3);
         lagretTournament.PointRules.FirstPlace.Should().Be(3);
+    }
+
+    [Fact]
+    public async Task Game_SpiltDato_LagresOgHentes()
+    {
+        var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
+        await using (var context = CreateContext())
+        {
+            context.Games.Add(game);
+            await context.SaveChangesAsync();
+        }
+
+        await using var lesContext = CreateContext();
+        var hentet = await lesContext.Games.SingleAsync(g => g.Id == game.Id);
+
+        hentet.PlayedOn.Should().Be(new DateOnly(2026, 3, 13));
+    }
+
+    [Fact]
+    public async Task Game_UtenDato_FraFørMigreringen_KanHentes()
+    {
+        var game = Game.Create("Kubb", Guid.NewGuid(), new DateOnly(2026, 3, 13));
+        await using (var context = CreateContext())
+        {
+            context.Games.Add(game);
+            await context.SaveChangesAsync();
+            // Slik ser rader ut som fantes før kolonnen ble lagt til
+            await context.Database.ExecuteSqlAsync($"UPDATE \"Games\" SET \"PlayedOn\" = NULL WHERE \"Id\" = {game.Id}");
+        }
+
+        await using var lesContext = CreateContext();
+        var hentet = await lesContext.Games.SingleAsync(g => g.Id == game.Id);
+
+        hentet.PlayedOn.Should().BeNull();
     }
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { formatPlayedOn, todayInNorway } from "@/lib/dates";
 import { updatePointRulesAction, createGameAction } from "./actions";
 
 // Datamodell for turnering med detaljer — inkluderer poengregler
@@ -24,6 +25,8 @@ type GameSummaryResponse = {
   id: string;
   tournamentId: string;
   name: string;
+  location: string | null;
+  playedOn: string | null;
   isDone: boolean;
   gameType: string;
 };
@@ -94,11 +97,16 @@ export default async function AdminTournamentDetailPage({ params }: Props) {
   // Hjelpefunksjon — genererer bundet Server Action for opprett spill
   const createGame = createGameAction.bind(null, tournament.id, tournament.slug);
 
-  // Sorterer spill: uferdige øverst, deretter alfabetisk
+  // Kronologisk: dato stigende, så navn, spill uten dato sist. API-et sorterer
+  // på samme måte, men navn sammenlignes her med norsk sortering (æ, ø, å).
   const sortedGames = games
     .slice()
     .sort((a, b) => {
-      if (a.isDone !== b.isDone) return a.isDone ? 1 : -1;
+      if (a.playedOn !== b.playedOn) {
+        if (a.playedOn === null) return 1;
+        if (b.playedOn === null) return -1;
+        return a.playedOn < b.playedOn ? -1 : 1;
+      }
       return a.name.localeCompare(b.name, "nb");
     });
 
@@ -279,6 +287,20 @@ export default async function AdminTournamentDetailPage({ params }: Props) {
             />
           </div>
 
+          <div className="min-w-[160px]">
+            <label htmlFor="playedOn" className="block text-sm font-medium mb-1">
+              Dato
+            </label>
+            <input
+              id="playedOn"
+              name="playedOn"
+              type="date"
+              required
+              defaultValue={todayInNorway()}
+              className="h-9 w-full rounded border border-gray-300 px-2 text-sm"
+            />
+          </div>
+
           <div className="flex-1 min-w-[180px]">
             <label htmlFor="gameType" className="block text-sm font-medium mb-1">
               Spilltype
@@ -345,6 +367,9 @@ export default async function AdminTournamentDetailPage({ params }: Props) {
                 className="flex items-center justify-between gap-4 p-4 border-b border-gray-200 last:border-b-0"
               >
                 <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-sm text-gray-500 tabular-nums">
+                    {formatPlayedOn(game.playedOn)}
+                  </span>
                   <span className="text-sm font-medium">{game.name}</span>
                   <span className="text-sm text-gray-500">
                     {game.gameType}
