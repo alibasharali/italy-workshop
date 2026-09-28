@@ -14,9 +14,15 @@ Closes #<N>
 
 ## Test selv
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/alibasharali/italy-workshop?ref=<branch>)
+```bash
+gh pr checkout <PR>
+dotnet run --project src/TronderLeikan.AppHost
+# raskere, uten Zitadel og innlogging:
+#   macOS/Linux: Auth__Mode=mock dotnet run --project src/TronderLeikan.AppHost
+#   PowerShell:  $env:Auth__Mode="mock"; dotnet run --project src/TronderLeikan.AppHost
+```
 
-<Stegene for å prøve storyen, fra forsiden. I Codespaces er du allerede logget inn som admin.>
+<Stegene for å prøve storyen, fra forsiden.>
 
 ## Kjente avveininger
 
