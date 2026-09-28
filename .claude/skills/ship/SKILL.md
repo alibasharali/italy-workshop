@@ -19,10 +19,13 @@ Run the full checks from `implement-spec` step 2. Any red result sends you back 
 
 Run the `code-review` skill with fixed point `origin/main` and the spec file as the spec source. Its subagents review the diff without this session's history.
 
-- **Hard findings:** a broken documented standard, a missing or wrong AC. Fix them, commit, and rerun the checks.
-- **Judgement calls** (smells): fix them, or list them in the PR under *Kjente avveininger* with one line each on why you left them.
+Classify every finding with `docs/agents/review-policy.md`:
 
-Done when no hard finding is open.
+- **Auto-fix:** fix it, commit as `fix(review): <what>`, and rerun the checks.
+- **Needs a human:** ask the developer, with your recommended fix. Do what they decide.
+- Judgement calls (smells) you leave in place go in the PR under *Kjente avveininger*, with one line each on why.
+
+Done when no finding is open.
 
 ## 4. Open the PR
 
