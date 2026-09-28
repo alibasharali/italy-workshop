@@ -1,5 +1,5 @@
-using TronderLeikan.Application.Persons.Queries.GetPersons;
 using TronderLeikan.Application.Persons.Queries.GetPersonById;
+using TronderLeikan.Application.Persons.Queries.GetPersons;
 using TronderLeikan.Domain.Persons;
 
 namespace TronderLeikan.Application.Tests.Persons;

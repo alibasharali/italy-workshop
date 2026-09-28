@@ -13,7 +13,7 @@ All work follows the story → spec → PR workflow in `docs/agents/workflow.md`
 ./reset-local.sh                                 # wipe local Postgres volume + zitadel-bootstrap/ (stop AppHost first)
 ```
 
-CI (`.github/workflows/ci.yml`) runs restore/build/test in Release plus frontend `npm ci`, lint and build.
+CI (`.github/workflows/ci.yml`) runs restore, `dotnet format --verify-no-changes`, build and test in Release, plus frontend `npm ci`, lint and build.
 
 ## Running locally
 
@@ -40,6 +40,7 @@ Aspire (`src/TronderLeikan.AppHost/AppHost.cs`) starts, in order: Postgres (pers
 
 ## Tests (xUnit, AwesomeAssertions)
 
+- `Architecture.Tests`: NetArchTest rules that enforce the layering below: no layer references an outer one, controllers use only `ISender`, handlers are `sealed` and named `…Handler`. When one fails, fix the code, not the rule.
 - `Domain.Tests`: plain unit tests.
 - `Application.Tests`: handlers are constructed directly with `TestAppDbContext` (EF InMemory). **When you add an entity or change a mapping, update `TestAppDbContext.OnModelCreating` to mirror the Infrastructure configuration.**
 - `Infrastructure.Tests` and `Api.Tests`: real Postgres through Testcontainers. `Api.Tests` shares one `TronderLeikanApiFactory` (and one database) across classes via `[Collection(nameof(ApiTestCollection))]`, so tests must not assume an empty DB.

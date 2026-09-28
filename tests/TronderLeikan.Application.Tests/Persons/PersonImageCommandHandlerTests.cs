@@ -1,7 +1,7 @@
 using TronderLeikan.Application.Common.Interfaces;
-using TronderLeikan.Application.Persons.Commands.UploadPersonImage;
-using TronderLeikan.Application.Persons.Commands.DeletePersonImage;
 using TronderLeikan.Application.Persistence.Images;
+using TronderLeikan.Application.Persons.Commands.DeletePersonImage;
+using TronderLeikan.Application.Persons.Commands.UploadPersonImage;
 using TronderLeikan.Domain.Persons;
 
 namespace TronderLeikan.Application.Tests.Persons;

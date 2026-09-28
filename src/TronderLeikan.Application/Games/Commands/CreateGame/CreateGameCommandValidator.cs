@@ -1,5 +1,6 @@
 using FluentValidation;
 namespace TronderLeikan.Application.Games.Commands.CreateGame;
+
 public sealed class CreateGameCommandValidator : AbstractValidator<CreateGameCommand>
 {
     public CreateGameCommandValidator()

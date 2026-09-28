@@ -1,6 +1,6 @@
 using TronderLeikan.Application.Persons.Commands.CreatePerson;
-using TronderLeikan.Application.Persons.Commands.UpdatePerson;
 using TronderLeikan.Application.Persons.Commands.DeletePerson;
+using TronderLeikan.Application.Persons.Commands.UpdatePerson;
 using TronderLeikan.Domain.Persons;
 
 namespace TronderLeikan.Application.Tests.Persons;

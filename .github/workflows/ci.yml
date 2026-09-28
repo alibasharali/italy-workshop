@@ -23,6 +23,10 @@ jobs:
       - name: Restore
         run: dotnet restore
 
+      # Stilen står i .editorconfig. Fiks lokalt med: dotnet format TronderLeikan.slnx
+      - name: Format
+        run: dotnet format TronderLeikan.slnx --verify-no-changes --no-restore
+
       - name: Build
         run: dotnet build --no-restore --configuration Release
 

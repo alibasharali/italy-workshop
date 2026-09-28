@@ -30,11 +30,11 @@ internal sealed class GameConfiguration : IEntityTypeConfiguration<Game>
                 .HasDefaultValueSql("'{}'::uuid[]");
 
         UuidArray("_participants", "Participants");
-        UuidArray("_organizers",   "Organizers");
-        UuidArray("_spectators",   "Spectators");
-        UuidArray("_firstPlace",   "FirstPlace");
-        UuidArray("_secondPlace",  "SecondPlace");
-        UuidArray("_thirdPlace",   "ThirdPlace");
+        UuidArray("_organizers", "Organizers");
+        UuidArray("_spectators", "Spectators");
+        UuidArray("_firstPlace", "FirstPlace");
+        UuidArray("_secondPlace", "SecondPlace");
+        UuidArray("_thirdPlace", "ThirdPlace");
 
         builder.ToTable("Games");
     }

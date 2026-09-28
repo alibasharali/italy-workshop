@@ -1,5 +1,5 @@
-using TronderLeikan.Application.Games.Commands.RegisterSimracingResult;
 using TronderLeikan.Application.Games.Commands.CompleteSimracingGame;
+using TronderLeikan.Application.Games.Commands.RegisterSimracingResult;
 using TronderLeikan.Application.Games.Queries.GetSimracingResults;
 using TronderLeikan.Domain.Games;
 using TronderLeikan.Domain.Persons;

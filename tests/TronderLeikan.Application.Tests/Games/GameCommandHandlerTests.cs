@@ -1,6 +1,6 @@
-using TronderLeikan.Application.Games.Commands.CreateGame;
 using TronderLeikan.Application.Games.Commands.AddParticipant;
 using TronderLeikan.Application.Games.Commands.CompleteGame;
+using TronderLeikan.Application.Games.Commands.CreateGame;
 using TronderLeikan.Domain.Games;
 using TronderLeikan.Domain.Persons;
 using TronderLeikan.Domain.Tournaments;
