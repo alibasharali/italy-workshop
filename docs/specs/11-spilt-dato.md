@@ -1,7 +1,7 @@
 ---
 issue: 11
 title: Når ble det spilt?
-status: draft
+status: approved
 branch: feat/11-spilt-dato
 ---
 
