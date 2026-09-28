@@ -31,10 +31,13 @@ type ScoreboardEntryResponse = {
 // Kortform av et spill — tilsvarer API-respons fra /api/v1/tournaments/:id/games
 type GameSummaryResponse = {
   id: string;
+  tournamentId: string;
   name: string;
+  location: string | null;
   playedOn: string | null;
   occasion: string | null;
   isDone: boolean;
+  gameType: string;
 };
 
 // Henter turneringsdetaljer via slug. Returnerer null ved feil eller manglende ressurs.

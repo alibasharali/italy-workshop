@@ -39,7 +39,13 @@ type PersonSummaryResponse = {
 // Kortform av spillene i turneringen - brukes til forslag om anledning
 type GameSummaryResponse = {
   id: string;
+  tournamentId: string;
+  name: string;
+  location: string | null;
+  playedOn: string | null;
   occasion: string | null;
+  isDone: boolean;
+  gameType: string;
 };
 
 // API-basis-URL - hentes fra miljøvariabel, kun tilgjengelig server-side
