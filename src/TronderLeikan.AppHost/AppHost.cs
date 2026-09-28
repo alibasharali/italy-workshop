@@ -26,14 +26,9 @@ var postgres = builder.AddPostgres("postgres", password: postgresPassword)
     .WithLifetime(ContainerLifetime.Persistent);
 var tronderleikanDb = postgres.AddDatabase("tronderleikan");
 
-// Zitadel bruker en separat database på samme Postgres-instans
-var zitadelDb = postgres.AddDatabase("zitadel");
-
-// Zitadel v4-stack: api + login UI + Traefik proxy. Traefik er eneste inngangspunkt.
-// Porten må være stabil mellom kjøringer fordi Zitadel lagrer login-URL-ene i databasen ved første init.
-// Er 8080 opptatt: dotnet user-secrets set "Zitadel:Port" 8081 --project src/TronderLeikan.AppHost, og nullstill med reset-local.
-var zitadelPort = builder.Configuration.GetValue("Zitadel:Port", 8080);
-var zitadel = builder.AddZitadel("zitadel", zitadelDb, postgresPassword, zitadelMasterKey, zitadelPort);
+// Auth:Mode=mock brukes i PR-miljøer (Codespaces): ingen Zitadel, frontend later som en admin er logget inn.
+// Kun for dev — frontend nekter å starte med mock i produksjonsbygg.
+var mockAuth = string.Equals(builder.Configuration["Auth:Mode"], "mock", StringComparison.OrdinalIgnoreCase);
 
 // DbMigrator kjøres automatisk ved oppstart, etter at PostgreSQL er klar.
 // Kjører migrasjoner og legger inn demodata hvis databasen er tom. API venter til den er ferdig.
@@ -43,27 +38,46 @@ var migrator = builder.AddProject<Projects.TronderLeikan_DbMigrator>("migrator")
 
 var api = builder.AddProject<Projects.TronderLeikan_API>("api")
     .WithReference(tronderleikanDb)
-    // Eksponerer Zitadel-endepunktet som services__zitadel-proxy__http__0
-    .WithReference(zitadel.GetEndpoint("http"))
     .WaitFor(migrator)
-    .WaitFor(zitadel)
     .WithHttpHealthCheck("/health");
 
 // Frontend — Next.js via npm. Aspire kjører «npm install» og deretter «npm run dev», så en fersk klon starter uten manuelle steg.
 // better-auth trenger ZITADEL_ISSUER, CLIENT_ID, CLIENT_SECRET og BETTER_AUTH_SECRET
 var frontend = builder.AddJavaScriptApp("frontend", "../frontend")
     .WithReference(api)
-    .WithReference(zitadel.GetEndpoint("http"))
     .WithEnvironment("API_BASE_URL", api.GetEndpoint("http"))
-    .WithEnvironment("ZITADEL_ISSUER", zitadel.GetEndpoint("http"))
     .WithEnvironment("BETTER_AUTH_SECRET", betterAuthSecret)
-    // Ingen fast port: Aspire velger en ledig port og Next.js leser den fra PORT. Adressen står i dashboardet.
+    // Lokalt: ingen fast port, Aspire velger en ledig og Next.js leser den fra PORT. Adressen står i dashboardet.
     // Provisioneren under oppdaterer redirect-URI i Zitadel hvis porten endrer seg mellom kjøringer.
-    .WithHttpEndpoint(env: "PORT", name: "http")
-    .WaitFor(api)
-    .WaitFor(zitadel);
+    // Mock (Codespaces): fast port 3000, så devcontainer kan videresende og åpne den.
+    .WithHttpEndpoint(port: mockAuth ? 3000 : null, env: "PORT", name: "http", isProxied: !mockAuth)
+    .WaitFor(api);
 
 frontend.WithEnvironment("BETTER_AUTH_URL", frontend.GetEndpoint("http"));
+
+if (mockAuth)
+{
+    frontend.WithEnvironment("AUTH_MODE", "mock");
+    builder.Build().Run();
+    return;
+}
+
+// Zitadel bruker en separat database på samme Postgres-instans
+var zitadelDb = postgres.AddDatabase("zitadel");
+
+// Zitadel v4-stack: api + login UI + Traefik proxy. Traefik er eneste inngangspunkt.
+// Porten må være stabil mellom kjøringer fordi Zitadel lagrer login-URL-ene i databasen ved første init.
+// Er 8080 opptatt: dotnet user-secrets set "Zitadel:Port" 8081 --project src/TronderLeikan.AppHost, og nullstill med reset-local.
+var zitadelPort = builder.Configuration.GetValue("Zitadel:Port", 8080);
+var zitadel = builder.AddZitadel("zitadel", zitadelDb, postgresPassword, zitadelMasterKey, zitadelPort);
+
+// Eksponerer Zitadel-endepunktet som services__zitadel-proxy__http__0
+api.WithReference(zitadel.GetEndpoint("http")).WaitFor(zitadel);
+
+frontend
+    .WithReference(zitadel.GetEndpoint("http"))
+    .WithEnvironment("ZITADEL_ISSUER", zitadel.GetEndpoint("http"))
+    .WaitFor(zitadel);
 
 // OIDC-klienten opprettes i Zitadel første gang frontend starter, og lagres i zitadel-bootstrap/ (gitignored).
 // Dermed slipper alle å opprette appen manuelt i Zitadel-konsollen.

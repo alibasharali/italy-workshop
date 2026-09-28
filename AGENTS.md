@@ -21,6 +21,7 @@ Aspire (`src/TronderLeikan.AppHost/AppHost.cs`) starts, in order: Postgres (pers
 
 - Admin login: `zitadel-admin@zitadel.localhost` / `Password1!`.
 - Secrets are generated and kept in AppHost user secrets. The frontend's OIDC client is provisioned in Zitadel automatically and cached in `src/TronderLeikan.AppHost/zitadel-bootstrap/` (gitignored).
+- `Auth__Mode=mock` (used by the Codespaces PR environment in `.devcontainer/`) skips Zitadel, pins the frontend to port 3000, and gives the frontend a fake admin session. Frontend code gets the session only through `getSession()` in `src/frontend/src/lib/session.ts`, never through `auth.api.getSession` directly, or mock mode breaks.
 - Don't run the AppHost from a git worktree. The Zitadel port and Postgres volume are shared, and `zitadel-bootstrap/` only exists in the main clone. See the troubleshooting table in `README.md`.
 
 ## Backend architecture (.NET 10, Clean Architecture)

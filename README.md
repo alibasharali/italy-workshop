@@ -136,6 +136,13 @@ pwsh -ExecutionPolicy Bypass -File .\reset-local.ps1  # Windows (PowerShell 7)
 | Frontend starter ikke, `frontend-npm-install` feiler | Node.js/npm mangler eller nettverket blokkerer registry | Kjør `npm install` manuelt i `src/frontend` og se feilen |
 | Sesjonen forsvinner etter noen minutter | better-auth kjører uten database og lagrer sesjonen i cookie | Forventet. Cookien fornyes ved aktivitet og varer 7 dager |
 
+### PR-miljø i GitHub Codespaces
+
+Hver PR har en «Open in Codespaces»-knapp. Den starter hele stacken fra PR-branchen i skyen, med **mock-innlogging**: Zitadel kjører ikke, og du er allerede logget inn som «Demo-admin» på `/admin`.
+Frontend åpnes av seg selv på port 3000 når stacken er klar. Første gang tar det noen minutter.
+Du finner og sletter Codespaces på <https://github.com/codespaces>.
+Oppsettet står i `.devcontainer/`. Mock slås på med `Auth__Mode=mock`, og frontend nekter å starte med det i et produksjonsbygg.
+
 ### Kjør kun frontend (manuelt)
 
 ```bash
