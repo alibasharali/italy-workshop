@@ -4,6 +4,8 @@ This file provides guidance to coding agents working with code in this repositor
 
 TrønderLeikan: a points/scoreboard system for informal company competitions. Domain rules (point values, ranking ties) are in `docs/TRONDER_LEIKAN.md`; workshop user stories are in `docs/backlog.md`. Code comments, docs, error messages and test names are written in **Norwegian**. Keep new ones in Norwegian too.
 
+All work follows the story → spec → PR workflow in `docs/agents/workflow.md`. Read it before starting on a story.
+
 ## Commands
 
 ```bash
