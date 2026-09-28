@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatPlayedOn, todayInNorway } from "@/lib/dates";
+import { occasionSuggestions } from "@/lib/occasions";
 import { updatePointRulesAction, createGameAction } from "./actions";
 
 // Datamodell for turnering med detaljer — inkluderer poengregler
@@ -27,6 +28,7 @@ type GameSummaryResponse = {
   name: string;
   location: string | null;
   playedOn: string | null;
+  occasion: string | null;
   isDone: boolean;
   gameType: string;
 };
@@ -109,6 +111,8 @@ export default async function AdminTournamentDetailPage({ params }: Props) {
       }
       return a.name.localeCompare(b.name, "nb");
     });
+
+  const suggestions = occasionSuggestions(sortedGames);
 
   return (
     <>
@@ -302,6 +306,26 @@ export default async function AdminTournamentDetailPage({ params }: Props) {
           </div>
 
           <div className="flex-1 min-w-[180px]">
+            <label htmlFor="occasion" className="block text-sm font-medium mb-1">
+              Anledning (valgfri)
+            </label>
+            <input
+              id="occasion"
+              name="occasion"
+              type="text"
+              maxLength={200}
+              list="occasion-suggestions"
+              placeholder="Fredagspils uke 11"
+              className="h-9 w-full rounded border border-gray-300 px-2 text-sm"
+            />
+            <datalist id="occasion-suggestions">
+              {suggestions.map((o) => (
+                <option key={o} value={o} />
+              ))}
+            </datalist>
+          </div>
+
+          <div className="flex-1 min-w-[180px]">
             <label htmlFor="gameType" className="block text-sm font-medium mb-1">
               Spilltype
             </label>
@@ -367,8 +391,9 @@ export default async function AdminTournamentDetailPage({ params }: Props) {
                 className="flex items-center justify-between gap-4 p-4 border-b border-gray-200 last:border-b-0"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-sm text-gray-500 tabular-nums">
+                  <span className="text-sm text-gray-500">
                     {formatPlayedOn(game.playedOn)}
+                    {game.occasion && ` · ${game.occasion}`}
                   </span>
                   <span className="text-sm font-medium">{game.name}</span>
                   <span className="text-sm text-gray-500">

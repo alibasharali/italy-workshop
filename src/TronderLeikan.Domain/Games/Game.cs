@@ -20,6 +20,8 @@ public sealed class Game : Entity
     public string? Location { get; private set; }
     // Null bare for spill registrert før datoen ble påkrevd
     public DateOnly? PlayedOn { get; private set; }
+    // Hvilken tur eller fredagspils spillet hørte til
+    public string? Occasion { get; private set; }
     public bool IsDone { get; private set; }
     public GameType GameType { get; private set; }
     public bool IsOrganizersParticipating { get; private set; }
@@ -81,4 +83,8 @@ public sealed class Game : Entity
     public void RemoveBanner() => HasBanner = false;
     public void UpdateDescription(string? description) => Description = description;
     public void UpdateLocation(string? location) => Location = location;
+
+    // Mellomrom rundt fjernes, og tom tekst betyr ingen anledning
+    public void UpdateOccasion(string? occasion) =>
+        Occasion = string.IsNullOrWhiteSpace(occasion) ? null : occasion.Trim();
 }

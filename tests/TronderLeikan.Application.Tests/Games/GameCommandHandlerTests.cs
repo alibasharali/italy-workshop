@@ -17,7 +17,7 @@ public sealed class GameCommandHandlerTests
         var tournament = Tournament.Create("NM", "nm");
         db.Tournaments.Add(tournament);
         await db.SaveChangesAsync();
-        var result = await new CreateGameCommandHandler(db).Handle(new CreateGameCommand(tournament.Id, "Dartspill", GameType.Standard, new DateOnly(2026, 3, 13)));
+        var result = await new CreateGameCommandHandler(db).Handle(new CreateGameCommand(tournament.Id, "Dartspill", GameType.Standard, new DateOnly(2026, 3, 13), null));
         Assert.True(result.IsSuccess);
         Assert.Single(db.Games.ToList());
     }
@@ -63,7 +63,7 @@ public sealed class GameCommandHandlerTests
         await db.SaveChangesAsync();
 
         var result = await new CreateGameCommandHandler(db).Handle(
-            new CreateGameCommand(tournament.Id, "Dart", GameType.Standard, new DateOnly(2026, 3, 13)));
+            new CreateGameCommand(tournament.Id, "Dart", GameType.Standard, new DateOnly(2026, 3, 13), null));
 
         result.IsSuccess.Should().BeTrue();
         var game = await db.Games.FindAsync(result.Value);
@@ -73,7 +73,7 @@ public sealed class GameCommandHandlerTests
     [Fact]
     public void CreateGameValidator_UtenDato_GirValideringsfeilPåPlayedOn()
     {
-        var command = new CreateGameCommand(Guid.NewGuid(), "Dart", GameType.Standard, null);
+        var command = new CreateGameCommand(Guid.NewGuid(), "Dart", GameType.Standard, null, null);
 
         var result = new CreateGameCommandValidator().Validate(command);
 
@@ -85,10 +85,40 @@ public sealed class GameCommandHandlerTests
     [Fact]
     public void CreateGameValidator_MedDatoIFremtiden_ErGyldig()
     {
-        var command = new CreateGameCommand(Guid.NewGuid(), "Dart", GameType.Standard, new DateOnly(2027, 1, 1));
+        var command = new CreateGameCommand(Guid.NewGuid(), "Dart", GameType.Standard, new DateOnly(2027, 1, 1), null);
 
         var result = new CreateGameCommandValidator().Validate(command);
 
         result.IsValid.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task CreateGame_LagrerAnledningTrimmet()
+    {
+        await using var db = TestAppDbContext.Create();
+        var tournament = Tournament.Create("NM", "nm");
+        db.Tournaments.Add(tournament);
+        await db.SaveChangesAsync();
+
+        var result = await new CreateGameCommandHandler(db).Handle(
+            new CreateGameCommand(tournament.Id, "Dart", GameType.Standard, new DateOnly(2026, 3, 13), "  Fredagspils uke 11 "));
+
+        var game = await db.Games.FindAsync(result.Value);
+        game!.Occasion.Should().Be("Fredagspils uke 11");
+    }
+
+    [Theory]
+    [InlineData(200, true)]
+    [InlineData(201, false)]
+    public void CreateGameValidator_AnledningHarMaks200Tegn(int lengde, bool gyldig)
+    {
+        var command = new CreateGameCommand(Guid.NewGuid(), "Dart", GameType.Standard, new DateOnly(2026, 3, 13), new string('a', lengde));
+
+        var result = new CreateGameCommandValidator().Validate(command);
+
+        result.IsValid.Should().Be(gyldig);
+        if (!gyldig)
+            result.Errors.Should().ContainSingle(e => e.PropertyName == "Occasion")
+                .Which.ErrorCode.Should().Be("Game.OccasionTooLong");
     }
 }

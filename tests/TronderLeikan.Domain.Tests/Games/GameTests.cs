@@ -43,6 +43,30 @@ public class GameTests
     }
 
     [Fact]
+    public void UpdateOccasion_FjernerMellomromRundt()
+    {
+        var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
+
+        game.UpdateOccasion("  Fredagspils uke 11 ");
+
+        game.Occasion.Should().Be("Fredagspils uke 11");
+    }
+
+    [Theory]
+    [InlineData("   ")]
+    [InlineData("")]
+    [InlineData(null)]
+    public void UpdateOccasion_TomTekst_GirIngenAnledning(string? occasion)
+    {
+        var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
+        game.UpdateOccasion("Fredagspils uke 11");
+
+        game.UpdateOccasion(occasion);
+
+        game.Occasion.Should().BeNull();
+    }
+
+    [Fact]
     public void Create_MedGameType_SetsGameType()
     {
         var game = Game.Create("Simracing", Guid.NewGuid(), new DateOnly(2026, 3, 13), GameType.Simracing);

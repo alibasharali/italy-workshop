@@ -49,10 +49,12 @@ public sealed class GameBannerAndQueryTests
         var tournament = Tournament.Create("Fredagspils", "fredagspils");
         db.Tournaments.Add(tournament);
         var kubb = Game.Create("Kubb", tournament.Id, new DateOnly(2026, 1, 1));
+        var marioKart = Game.Create("Mario Kart", tournament.Id, new DateOnly(2026, 3, 6));
+        marioKart.UpdateOccasion("Fredagspils uke 10");
         db.Games.AddRange(
             Game.Create("Dart", tournament.Id, new DateOnly(2026, 3, 13)),
             Game.Create("Boccia", tournament.Id, new DateOnly(2026, 3, 13)),
-            Game.Create("Mario Kart", tournament.Id, new DateOnly(2026, 3, 6)),
+            marioKart,
             kubb);
         // Kubb er registrert før datoen ble påkrevd
         db.Entry(kubb).Property(g => g.PlayedOn).CurrentValue = null;
@@ -62,19 +64,23 @@ public sealed class GameBannerAndQueryTests
 
         result.Value!.Select(g => g.Name).Should().Equal("Mario Kart", "Boccia", "Dart", "Kubb");
         result.Value![0].PlayedOn.Should().Be(new DateOnly(2026, 3, 6));
+        result.Value![0].Occasion.Should().Be("Fredagspils uke 10");
         result.Value![3].PlayedOn.Should().BeNull();
+        result.Value![3].Occasion.Should().BeNull();
     }
 
     [Fact]
-    public async Task GetGameById_ReturnererSpiltDato()
+    public async Task GetGameById_ReturnererSpiltDatoOgAnledning()
     {
         await using var db = TestAppDbContext.Create();
         var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
+        game.UpdateOccasion("Fredagspils uke 11");
         db.Games.Add(game);
         await db.SaveChangesAsync();
 
         var result = await new GetGameByIdQueryHandler(db).Handle(new GetGameByIdQuery(game.Id));
 
         result.Value!.PlayedOn.Should().Be(new DateOnly(2026, 3, 13));
+        result.Value!.Occasion.Should().Be("Fredagspils uke 11");
     }
 }

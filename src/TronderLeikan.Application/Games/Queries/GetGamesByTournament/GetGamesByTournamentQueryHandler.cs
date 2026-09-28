@@ -20,7 +20,7 @@ public sealed class GetGamesByTournamentQueryHandler(IAppDbContext db)
             .OrderBy(g => g.PlayedOn == null)
             .ThenBy(g => g.PlayedOn)
             .ThenBy(g => g.Name)
-            .Select(g => new GameSummaryResponse(g.Id, g.TournamentId, g.Name, g.Location, g.PlayedOn, g.IsDone, g.GameType))
+            .Select(g => new GameSummaryResponse(g.Id, g.TournamentId, g.Name, g.Location, g.PlayedOn, g.Occasion, g.IsDone, g.GameType))
             .ToArrayAsync(ct);
     }
 }

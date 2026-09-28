@@ -49,6 +49,7 @@ export async function createGameAction(
     name: formData.get("name") as string,
     gameType: formData.get("gameType") as string,
     playedOn: formData.get("playedOn") as string,
+    occasion: (formData.get("occasion") as string | null) || null,
     isOrganizersParticipating:
       formData.get("isOrganizersParticipating") === "on",
   };

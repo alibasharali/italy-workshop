@@ -205,4 +205,49 @@ public class GamesApiTests(TronderLeikanApiFactory factory)
         body.GetProperty("isDone").GetBoolean().Should().BeTrue();
         body.GetProperty("playedOn").GetString().Should().Be("2027-01-01");
     }
+
+    [Fact]
+    public async Task POST_games_med_anledning_lagrer_den_trimmet()
+    {
+        var tournamentId = await OpprettTurnering();
+
+        var id = await (await _client.PostAsJsonAsync("/api/v1/games",
+            new { tournamentId, name = "Dart", playedOn = "2026-03-13", occasion = "  Fredagspils uke 11 " }))
+            .Content.ReadFromJsonAsync<Guid>();
+
+        var body = await (await _client.GetAsync($"/api/v1/games/{id}")).Content.ReadFromJsonAsync<JsonElement>();
+        body.GetProperty("occasion").GetString().Should().Be("Fredagspils uke 11");
+    }
+
+    [Fact]
+    public async Task POST_games_med_blank_eller_uten_anledning_gir_null()
+    {
+        var tournamentId = await OpprettTurnering();
+
+        var blank = await (await _client.PostAsJsonAsync("/api/v1/games",
+            new { tournamentId, name = "Dart", playedOn = "2026-03-13", occasion = "   " }))
+            .Content.ReadFromJsonAsync<Guid>();
+        var uten = await (await _client.PostAsJsonAsync("/api/v1/games",
+            new { tournamentId, name = "Kubb", playedOn = "2026-03-13" }))
+            .Content.ReadFromJsonAsync<Guid>();
+
+        foreach (var id in new[] { blank, uten })
+        {
+            var body = await (await _client.GetAsync($"/api/v1/games/{id}")).Content.ReadFromJsonAsync<JsonElement>();
+            body.GetProperty("occasion").ValueKind.Should().Be(JsonValueKind.Null);
+        }
+    }
+
+    [Fact]
+    public async Task POST_games_med_for_lang_anledning_returnerer_400()
+    {
+        var tournamentId = await OpprettTurnering();
+
+        var response = await _client.PostAsJsonAsync("/api/v1/games",
+            new { tournamentId, name = "Dart", playedOn = "2026-03-13", occasion = new string('a', 201) });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var body = await response.Content.ReadFromJsonAsync<JsonElement>();
+        body.GetProperty("title").GetString().Should().Be("Game.OccasionTooLong");
+    }
 }

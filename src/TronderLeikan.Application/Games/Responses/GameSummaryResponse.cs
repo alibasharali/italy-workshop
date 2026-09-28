@@ -9,5 +9,6 @@ public record GameSummaryResponse(
     string Name,
     string? Location,
     DateOnly? PlayedOn,
+    string? Occasion,
     bool IsDone,
     GameType GameType);

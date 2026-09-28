@@ -104,9 +104,10 @@ public sealed class GamePersistenceTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Game_SpiltDato_LagresOgHentes()
+    public async Task Game_SpiltDatoOgAnledning_LagresOgHentes()
     {
         var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
+        game.UpdateOccasion("Fredagspils uke 11");
         await using (var context = CreateContext())
         {
             context.Games.Add(game);
@@ -117,6 +118,7 @@ public sealed class GamePersistenceTests : IAsyncLifetime
         var hentet = await lesContext.Games.SingleAsync(g => g.Id == game.Id);
 
         hentet.PlayedOn.Should().Be(new DateOnly(2026, 3, 13));
+        hentet.Occasion.Should().Be("Fredagspils uke 11");
     }
 
     [Fact]
@@ -135,5 +137,6 @@ public sealed class GamePersistenceTests : IAsyncLifetime
         var hentet = await lesContext.Games.SingleAsync(g => g.Id == game.Id);
 
         hentet.PlayedOn.Should().BeNull();
+        hentet.Occasion.Should().BeNull();
     }
 }
