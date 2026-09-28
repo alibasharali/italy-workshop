@@ -136,12 +136,19 @@ pwsh -ExecutionPolicy Bypass -File .\reset-local.ps1  # Windows (PowerShell 7)
 | Frontend starter ikke, `frontend-npm-install` feiler | Node.js/npm mangler eller nettverket blokkerer registry | Kjør `npm install` manuelt i `src/frontend` og se feilen |
 | Sesjonen forsvinner etter noen minutter | better-auth kjører uten database og lagrer sesjonen i cookie | Forventet. Cookien fornyes ved aktivitet og varer 7 dager |
 
-### PR-miljø i GitHub Codespaces
+### Teste en PR lokalt
 
-Hver PR har en «Open in Codespaces»-knapp. Den starter hele stacken fra PR-branchen i skyen, med **mock-innlogging**: Zitadel kjører ikke, og du er allerede logget inn som «Demo-admin» på `/admin`.
-Frontend åpnes av seg selv på port 3000 når stacken er klar. Første gang tar det noen minutter.
-Du finner og sletter Codespaces på <https://github.com/codespaces>.
-Oppsettet står i `.devcontainer/`. Mock slås på med `Auth__Mode=mock`, og frontend nekter å starte med det i et produksjonsbygg.
+```bash
+gh pr checkout <PR-nummer>
+dotnet run --project src/TronderLeikan.AppHost
+```
+
+Da kjører alt som vanlig, med ordinær Zitadel-innlogging. Raskere, uten Zitadel og innlogging: sett `Auth__Mode=mock` (macOS/Linux) eller `$env:Auth__Mode="mock"` (PowerShell 7) før kommandoen over. Du er da allerede logget inn som «Demo-admin» på `/admin`, og frontend ligger på fast port <http://localhost:3000>, så porten må være ledig.
+
+### PR-miljø i GitHub Codespaces (eksperimentelt)
+
+`.devcontainer/` starter den samme mock-stacken i en Codespace. Oppstarten er foreløpig treg og ustabil, så lokal testing er standard.
+Frontend nekter å starte med mock i et produksjonsbygg.
 
 ### Kjør kun frontend (manuelt)
 
