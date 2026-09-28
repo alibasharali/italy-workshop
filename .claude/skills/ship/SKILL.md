@@ -29,7 +29,6 @@ Done when no hard finding is open.
 1. `git push -u origin HEAD`
 2. Fill in [pr-template.md](pr-template.md), in Norwegian because humans read it, and create the PR: `gh pr create --title "feat: <issue title> (#<N>)" --body-file <file>`.
    - `Closes #<N>` moves the card to *In review* through the board's automation.
-   - Include the Codespaces section only if `.devcontainer/` exists.
 3. Check the card. If it is not in *In review* after a minute, run `.claude/scripts/board-status.sh <N> "In review"`.
 
 ## 5. Hand over

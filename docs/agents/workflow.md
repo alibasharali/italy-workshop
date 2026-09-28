@@ -7,7 +7,7 @@ The skills in `.claude/skills/` automate the steps. This file is the contract th
 
 ```
 Backlog ──/story N──▶ Spec ──human approves──▶ In progress ──▶ In review ──human merges──▶ Done
-            (grill + write spec)   (implement slices, prove)   (PR + Codespace)
+            (grill + write spec)   (implement slices, prove)   (PR + test steps) 
 ```
 
 | Board column | Meaning | Who moves the card |
@@ -15,7 +15,7 @@ Backlog ──/story N──▶ Spec ──human approves──▶ In progress �
 | Backlog | Story exists as an issue, with no spec yet | — |
 | Spec | Branch created; spec is being written via grilling | agent (`/story`) |
 | In progress | Spec has `status: approved`; agent is implementing | agent |
-| In review | PR is open, CI is running, Codespace link posted | agent (`/ship`) |
+| In review | PR is open, CI is running, local test steps in the PR | agent (`/ship`) |
 | Done | PR squash-merged to `main` | GitHub automation |
 
 Board: https://github.com/users/alibasharali/projects/2
@@ -49,9 +49,9 @@ Board: https://github.com/users/alibasharali/projects/2
 6. **Ship.** `/ship`:
    1. runs `/code-review` in a fresh subagent and fixes its findings
    2. pushes
-   3. opens the PR, which links the issue and spec and includes the proof and an "Open in Codespaces" link
+   3. opens the PR, which links the issue and spec and includes the proof and the steps to test it locally
    4. moves the card to *In review*
-7. **Review.** CI runs the checks and the Claude Code review action. The human tests in the Codespace (mock auth: already logged in as admin) and squash-merges. GitHub moves the card to *Done*.
+7. **Review.** CI runs the checks and the Claude Code review action. The human checks out the PR (`gh pr checkout <PR>`) in the main clone, runs the AppHost, tests it, and squash-merges. GitHub moves the card to *Done*.
 
 ## Guardrails
 
