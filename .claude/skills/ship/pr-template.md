@@ -1,6 +1,6 @@
 Closes #<N>
 
-**Spec:** [`docs/specs/<N>-<slug>.md`](../blob/<branch>/docs/specs/<N>-<slug>.md)
+**Spec:** [`docs/specs/<N>-<slug>.md`](../blob/main/docs/specs/<N>-<slug>.md)
 
 ## Hva er endret
 
@@ -10,7 +10,7 @@ Closes #<N>
 
 | AC | Status | Bevis |
 |---|---|---|
-| AC1 <navn> | ✅ | [AC1.png](../blob/<branch>/docs/specs/<N>-<slug>/proof/AC1.png) |
+| AC1 <navn> | ✅ | [AC1.png](../blob/main/docs/specs/<N>-<slug>/proof/AC1.png) |
 
 ## Test selv
 
