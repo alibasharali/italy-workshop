@@ -19,6 +19,7 @@ With an issue number, read it: `gh issue view <N> --comments`. Without one, list
 Resume instead of restarting. Check, in this order, and jump to the first step that is not done:
 
 - an open PR for `feat/<N>-*` (`gh pr list --head`) → step 7, only to report status
+- a ledger `docs/specs/<N>-*/progress.md` → step 6; `implement-spec` resumes from the first slice that isn't `done`
 - a spec in `docs/specs/<N>-*.md` with `status: approved` → step 6
 - a spec with `status: draft` → step 5
 - a branch `feat/<N>-*` → switch to it, then step 4

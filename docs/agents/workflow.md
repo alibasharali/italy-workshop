@@ -39,10 +39,10 @@ Board: https://github.com/users/alibasharali/projects/2
 
    The spec is committed on the branch.
 3. **Gate.** The developer reads the spec and sets `status: approved`. **No production code is written before this.** This is the only human gate before the PR, so it's where core-domain judgement happens.
-4. **Implement** (`implement-spec`). The card moves to *In progress*. The agent implements one slice at a time with TDD (red, then green), and commits per slice. It uses the conventions in `AGENTS.md` and `.claude/rules/`.
+4. **Implement** (`implement-spec`). The card moves to *In progress*. The main session orchestrates: a fresh `slice-implementer` subagent builds each slice with TDD (red, then green) and commits it, a `slice-reviewer` checks it against its ACs and the conventions before the next slice starts, and every ruling lands in `docs/specs/<N>-<slug>/progress.md`. Workers can't talk to the developer; they return BLOCKED, and the orchestrator asks.
 5. **Prove.** Before shipping:
    - build, all tests, lint and format are green
-   - every acceptance criterion is demonstrated against the running app, with Playwright or API calls
+   - every acceptance criterion is demonstrated against the running app by the `prover` subagent, with Playwright or API calls
    - evidence is saved in `docs/specs/<N>-<slug>/proof/` and linked from the PR
 
    Green tests alone are not done.
@@ -53,6 +53,10 @@ Board: https://github.com/users/alibasharali/projects/2
    4. opens the PR, which links the issue and spec and includes the proof and the steps to test it locally
    5. moves the card to *In review*
 7. **Review.** CI runs the checks and the Claude Code review action. The review follows `docs/agents/review-policy.md`: unambiguous findings are fixed and pushed as `fix(review): …` commits, and everything else becomes an unresolved thread that blocks the merge. Reply `@claude <what you want>` in a thread to have Claude fix it on the branch; a plain reply triggers nothing. Only a human resolves the thread. The human checks out the PR (`gh pr checkout <PR>`) in the main clone, runs the AppHost, tests it, and squash-merges. GitHub moves the card to *Done*.
+
+## Subagents
+
+`.claude/agents/` holds the three workers of step 4–5: `slice-implementer` (fresh per slice, TDD preloaded), `slice-reviewer` (read-only, remembers recurring findings across stories in `.claude/agent-memory/`), and `prover` (owns Playwright and Aspire, writes the evidence folder). The orchestrator in the main session writes the briefs, holds the ledger, and is the only one who talks to the developer. Grilling, approval and merge never move into a subagent.
 
 ## Learning loop
 
