@@ -39,7 +39,7 @@ Board: https://github.com/users/alibasharali/projects/2
 
    The spec is committed on the branch.
 3. **Gate.** The developer reads the spec and sets `status: approved`. **No production code is written before this.** This is the only human gate before the PR, so it's where core-domain judgement happens.
-4. **Implement** (`implement-spec`). The card moves to *In progress*. The main session orchestrates: a fresh `slice-implementer` subagent builds each slice with TDD (red, then green) and commits it, a `slice-reviewer` checks it against its ACs and the conventions before the next slice starts, and every ruling lands in `docs/specs/<N>-<slug>/progress.md`. Workers can't talk to the developer; they return BLOCKED, and the orchestrator asks.
+4. **Implement** (`implement-spec`). The card moves to *In progress*. The main session orchestrates: a fresh `slice-implementer` subagent builds each slice with TDD (red, then green) and leaves it in the working tree, the orchestrator commits it (workers never commit), a `slice-reviewer` checks it against its ACs and the conventions before the next slice starts, and every ruling lands in `docs/specs/<N>-<slug>/progress.md`. Workers can't talk to the developer; they return BLOCKED, and the orchestrator asks.
 5. **Prove.** Before shipping:
    - build, all tests, lint and format are green
    - every acceptance criterion is demonstrated against the running app by the `prover` subagent, with Playwright or API calls
