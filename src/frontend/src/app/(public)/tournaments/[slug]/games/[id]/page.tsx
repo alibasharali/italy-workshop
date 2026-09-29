@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { formatPlayedOn } from "@/lib/dates";
 
 // Datamodell for spilldetaljer — tilsvarer API-respons fra /api/v1/games/:id
 type GameDetailResponse = {
@@ -8,6 +9,8 @@ type GameDetailResponse = {
   tournamentId: string;
   name: string;
   description?: string;
+  playedOn: string | null;
+  occasion: string | null;
   isDone: boolean;
   gameType: string;
   hasBanner: boolean;
@@ -206,6 +209,14 @@ export default async function GamePage({
       <h1 className="text-2xl font-semibold">{game.name}</h1>
 
       <div className="mt-1 mb-6 flex flex-wrap items-center gap-2 text-sm text-gray-600">
+        <span>{formatPlayedOn(game.playedOn)}</span>
+        {game.occasion && (
+          <>
+            <span>·</span>
+            <span>{game.occasion}</span>
+          </>
+        )}
+        <span>·</span>
         <span>{game.gameType}</span>
         <span>·</span>
         <span>{game.isDone ? "Ferdig" : "Pågår"}</span>

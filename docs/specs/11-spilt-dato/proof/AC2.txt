@@ -1,0 +1,14 @@
+> POST /api/v1/games
+{
+  "tournamentId": "77496840-a5c8-4fde-904e-aef60e7b3ac9",
+  "name": "Uten dato",
+  "gameType": "Standard"
+}
+< 400
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "Game.PlayedOnMissing",
+  "status": 400,
+  "detail": "Spillet må ha en dato.",
+  "traceId": "00-03361364a86d6bcbdd5c021516079476-2debcc7ccf28962e-01"
+}

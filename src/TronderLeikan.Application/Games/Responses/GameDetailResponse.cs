@@ -7,6 +7,8 @@ public record GameDetailResponse(
     Guid TournamentId,
     string Name,
     string? Description,
+    DateOnly? PlayedOn,
+    string? Occasion,
     bool IsDone,
     GameType GameType,
     bool HasBanner,

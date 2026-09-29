@@ -37,3 +37,29 @@ export async function completeGameAction(
   if (!res.ok) throw new Error("Kunne ikke fullføre spill");
   revalidatePath(`/admin/tournaments/${tournamentSlug}/games/${gameId}`);
 }
+
+// Oppdaterer navn, beskrivelse, dato og anledning via PUT /api/v1/games/:gameId
+export async function updateGameAction(
+  gameId: string,
+  tournamentSlug: string,
+  formData: FormData
+) {
+  const body = {
+    name: formData.get("name") as string,
+    description: (formData.get("description") as string | null) || null,
+    playedOn: formData.get("playedOn") as string,
+    occasion: (formData.get("occasion") as string | null) || null,
+  };
+
+  const res = await fetch(`${API_BASE}/api/v1/games/${gameId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) throw new Error("Kunne ikke lagre spillet");
+  revalidatePath(`/admin/tournaments/${tournamentSlug}/games/${gameId}`);
+  revalidatePath(`/admin/tournaments/${tournamentSlug}`);
+  revalidatePath(`/tournaments/${tournamentSlug}`);
+  revalidatePath(`/tournaments/${tournamentSlug}/games/${gameId}`);
+}

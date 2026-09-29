@@ -1,12 +1,11 @@
 using FluentValidation;
-namespace TronderLeikan.Application.Games.Commands.CreateGame;
+namespace TronderLeikan.Application.Games.Commands.UpdateGame;
 
-public sealed class CreateGameCommandValidator : AbstractValidator<CreateGameCommand>
+public sealed class UpdateGameCommandValidator : AbstractValidator<UpdateGameCommand>
 {
-    public CreateGameCommandValidator()
+    public UpdateGameCommandValidator()
     {
         RuleFor(c => c.Name).NotEmpty().MaximumLength(500);
-        RuleFor(c => c.TournamentId).NotEmpty();
         RuleFor(c => c.PlayedOn).NotNull()
             .WithErrorCode("Game.PlayedOnMissing")
             .WithMessage("Spillet må ha en dato.");

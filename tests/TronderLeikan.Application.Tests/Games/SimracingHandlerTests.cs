@@ -12,7 +12,7 @@ public sealed class SimracingHandlerTests
     public async Task RegisterSimracingResult_LagrerResultat()
     {
         await using var db = TestAppDbContext.Create();
-        var game = Game.Create("F1 Race", Guid.NewGuid(), GameType.Simracing);
+        var game = Game.Create("F1 Race", Guid.NewGuid(), new DateOnly(2026, 3, 13), GameType.Simracing);
         var person = Person.Create("Ola", "Nordmann");
         db.Games.Add(game);
         db.Persons.Add(person);
@@ -26,7 +26,7 @@ public sealed class SimracingHandlerTests
     public async Task CompleteSimracingGame_BeregnerPlasseringerFraRacetider()
     {
         await using var db = TestAppDbContext.Create();
-        var game = Game.Create("F1 Race", Guid.NewGuid(), GameType.Simracing);
+        var game = Game.Create("F1 Race", Guid.NewGuid(), new DateOnly(2026, 3, 13), GameType.Simracing);
         var personA = Person.Create("A", "A");
         var personB = Person.Create("B", "B");
         var personC = Person.Create("C", "C");
@@ -50,7 +50,7 @@ public sealed class SimracingHandlerTests
     public async Task CompleteSimracingGame_Ties_DelerPlassering()
     {
         await using var db = TestAppDbContext.Create();
-        var game = Game.Create("F1 Race", Guid.NewGuid(), GameType.Simracing);
+        var game = Game.Create("F1 Race", Guid.NewGuid(), new DateOnly(2026, 3, 13), GameType.Simracing);
         var personA = Person.Create("A", "A");
         var personB = Person.Create("B", "B");
         db.Games.Add(game);

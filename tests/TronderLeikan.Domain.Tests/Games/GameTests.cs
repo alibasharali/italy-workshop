@@ -11,7 +11,7 @@ public class GameTests
     {
         var tournamentId = Guid.NewGuid();
 
-        var game = Game.Create("Kubb", tournamentId);
+        var game = Game.Create("Kubb", tournamentId, new DateOnly(2026, 3, 13));
 
         game.Id.Should().NotBeEmpty();
         game.Name.Should().Be("Kubb");
@@ -23,9 +23,63 @@ public class GameTests
     }
 
     [Fact]
+    public void Create_SetterSpiltDato()
+    {
+        var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
+
+        game.PlayedOn.Should().Be(new DateOnly(2026, 3, 13));
+    }
+
+    [Fact]
+    public void Complete_MedDatoIFremtiden_FullføresSomVanlig()
+    {
+        var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2027, 1, 1));
+        var vinner = Guid.NewGuid();
+
+        game.Complete([vinner], [], []);
+
+        game.IsDone.Should().BeTrue();
+        game.PlayedOn.Should().Be(new DateOnly(2027, 1, 1));
+    }
+
+    [Fact]
+    public void UpdatePlayedOn_EndrerDato()
+    {
+        var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
+
+        game.UpdatePlayedOn(new DateOnly(2026, 3, 20));
+
+        game.PlayedOn.Should().Be(new DateOnly(2026, 3, 20));
+    }
+
+    [Fact]
+    public void UpdateOccasion_FjernerMellomromRundt()
+    {
+        var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
+
+        game.UpdateOccasion("  Fredagspils uke 11 ");
+
+        game.Occasion.Should().Be("Fredagspils uke 11");
+    }
+
+    [Theory]
+    [InlineData("   ")]
+    [InlineData("")]
+    [InlineData(null)]
+    public void UpdateOccasion_TomTekst_GirIngenAnledning(string? occasion)
+    {
+        var game = Game.Create("Dart", Guid.NewGuid(), new DateOnly(2026, 3, 13));
+        game.UpdateOccasion("Fredagspils uke 11");
+
+        game.UpdateOccasion(occasion);
+
+        game.Occasion.Should().BeNull();
+    }
+
+    [Fact]
     public void Create_MedGameType_SetsGameType()
     {
-        var game = Game.Create("Simracing", Guid.NewGuid(), GameType.Simracing);
+        var game = Game.Create("Simracing", Guid.NewGuid(), new DateOnly(2026, 3, 13), GameType.Simracing);
 
         game.GameType.Should().Be(GameType.Simracing);
     }
@@ -33,7 +87,7 @@ public class GameTests
     [Fact]
     public void AddParticipant_LeggTilPerson()
     {
-        var game = Game.Create("Kubb", Guid.NewGuid());
+        var game = Game.Create("Kubb", Guid.NewGuid(), new DateOnly(2026, 3, 13));
         var personId = Guid.NewGuid();
 
         game.AddParticipant(personId);
@@ -44,7 +98,7 @@ public class GameTests
     [Fact]
     public void AddParticipant_DuplikatIgnoreres()
     {
-        var game = Game.Create("Kubb", Guid.NewGuid());
+        var game = Game.Create("Kubb", Guid.NewGuid(), new DateOnly(2026, 3, 13));
         var personId = Guid.NewGuid();
 
         game.AddParticipant(personId);
@@ -56,7 +110,7 @@ public class GameTests
     [Fact]
     public void AddOrganizer_LeggTilArrangør()
     {
-        var game = Game.Create("Kubb", Guid.NewGuid());
+        var game = Game.Create("Kubb", Guid.NewGuid(), new DateOnly(2026, 3, 13));
         var personId = Guid.NewGuid();
 
         game.AddOrganizer(personId, withParticipation: false);
@@ -68,7 +122,7 @@ public class GameTests
     [Fact]
     public void AddOrganizer_MedDeltakelse_SetsIsOrganizersParticipating()
     {
-        var game = Game.Create("Kubb", Guid.NewGuid());
+        var game = Game.Create("Kubb", Guid.NewGuid(), new DateOnly(2026, 3, 13));
 
         game.AddOrganizer(Guid.NewGuid(), withParticipation: true);
 
@@ -78,7 +132,7 @@ public class GameTests
     [Fact]
     public void AddSpectator_LeggTilTilskuer()
     {
-        var game = Game.Create("Kubb", Guid.NewGuid());
+        var game = Game.Create("Kubb", Guid.NewGuid(), new DateOnly(2026, 3, 13));
         var personId = Guid.NewGuid();
 
         game.AddSpectator(personId);
@@ -89,7 +143,7 @@ public class GameTests
     [Fact]
     public void Complete_SetsIsDoneOgPlasseringer()
     {
-        var game = Game.Create("Kubb", Guid.NewGuid());
+        var game = Game.Create("Kubb", Guid.NewGuid(), new DateOnly(2026, 3, 13));
         var alice = Guid.NewGuid();
         var bob = Guid.NewGuid();
         var charlie = Guid.NewGuid();
@@ -109,7 +163,7 @@ public class GameTests
     [Fact]
     public void Complete_RaiserGameCompletedEvent()
     {
-        var game = Game.Create("Kubb", Guid.NewGuid());
+        var game = Game.Create("Kubb", Guid.NewGuid(), new DateOnly(2026, 3, 13));
 
         game.Complete(firstPlace: [], secondPlace: [], thirdPlace: []);
 
@@ -121,7 +175,7 @@ public class GameTests
     [Fact]
     public void Complete_SupportsTies()
     {
-        var game = Game.Create("Kubb", Guid.NewGuid());
+        var game = Game.Create("Kubb", Guid.NewGuid(), new DateOnly(2026, 3, 13));
         var alice = Guid.NewGuid();
         var bob = Guid.NewGuid();
 
@@ -133,7 +187,7 @@ public class GameTests
     [Fact]
     public void SetBanner_SetsHasBannerTilTrue()
     {
-        var game = Game.Create("Kubb", Guid.NewGuid());
+        var game = Game.Create("Kubb", Guid.NewGuid(), new DateOnly(2026, 3, 13));
 
         game.SetBanner();
 

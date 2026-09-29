@@ -1,0 +1,42 @@
+> POST /api/v1/games
+{
+  "tournamentId": "77496840-a5c8-4fde-904e-aef60e7b3ac9",
+  "name": "Lang",
+  "gameType": "Standard",
+  "playedOn": "2026-03-13",
+  "occasion": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}
+< 400
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "Game.OccasionTooLong",
+  "status": 400,
+  "detail": "Anledningen kan ha maks 200 tegn.",
+  "traceId": "00-02a6bb465aa77421f60d503a655718b8-13e527c7cc79d46d-01"
+}
+
+> POST /api/v1/games
+{
+  "tournamentId": "77496840-a5c8-4fde-904e-aef60e7b3ac9",
+  "name": "Akkurat 200",
+  "gameType": "Standard",
+  "playedOn": "2026-03-13",
+  "occasion": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}
+< 201
+"34fe0a85-8e53-4146-878d-4d761fc8cf18"
+
+> PUT /api/v1/games/34fe0a85-8e53-4146-878d-4d761fc8cf18
+{
+  "name": "Akkurat 200",
+  "playedOn": "2026-03-13",
+  "occasion": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}
+< 400
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "Game.OccasionTooLong",
+  "status": 400,
+  "detail": "Anledningen kan ha maks 200 tegn.",
+  "traceId": "00-6444598d3db5e6276952b287fd23cb5e-105c4dc2a1a2d1e6-01"
+}

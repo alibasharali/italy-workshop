@@ -41,8 +41,9 @@ Everything here must pass together:
 Green tests are not proof. Show each AC working in the running app:
 
 1. Start the stack if it is not running: `dotnet run --project src/TronderLeikan.AppHost`, in the background, from the main clone. Get the frontend and API URLs from the Aspire MCP (`list_resources`).
+   - If it is already running with old code, use the Aspire MCP: `rebuild` the `migrator`, then `start` it (a rebuilt migrator stays stopped, and the API waits for it), then `rebuild` the `api`. The frontend reloads by itself.
 2. Follow the spec's *Proof plan* for each AC:
-   - UI: use the Playwright MCP and save a screenshot as `docs/specs/<N>-<slug>/proof/AC<n>.png`
+   - UI: use the Playwright MCP and save a screenshot as `docs/specs/<N>-<slug>/proof/AC<n>.png`. In dev mode, wait a second or two after navigating before you submit a form. A click before hydration is lost without an error, so confirm every mutation through the API.
    - API: save the request and response as `AC<n>.txt`
 3. Write `docs/specs/<N>-<slug>/proof/README.md`, a table with AC → evidence file → one line on what it shows.
 4. Commit as `test(proof): bevis for #<N>`.

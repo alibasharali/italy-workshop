@@ -1,0 +1,18 @@
+Forslag til anledning, lest fra DOM-en i nettleseren (Playwright) mot appen som kjører.
+Den native datalist-lista vises ikke på skjermbilder, så beviset er innholdet i <datalist>.
+
+Oppsett (via API):
+  Turnering A "Bevis #11 Sesong": Boccia og Shuffleboard med "Fredagspils uke 11",
+    Kubb med "Fredagspils uke 12", Mario Kart uten anledning.
+  Turnering B "Bevis #11 Tur": Vinquiz med "Lagtur Toscana".
+
+Opprettskjemaet, /admin/tournaments/bevis-sesong-ff1a
+  #occasion list="occasion-suggestions"
+  #occasion-suggestions → ["Fredagspils uke 11", "Fredagspils uke 12"]
+
+Redigeringsskjemaet til Dart i A, /admin/tournaments/bevis-sesong-ff1a/games/ce8b6557-…
+  #editOccasion (forhåndsutfylt "Fredagspils uke 11")
+  #edit-occasion-suggestions → ["Fredagspils uke 11", "Fredagspils uke 12"]
+
+"Fredagspils uke 11" er brukt av to spill, men foreslås én gang.
+"Lagtur Toscana" fra turnering B foreslås ikke.

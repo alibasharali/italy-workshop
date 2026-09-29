@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import {
+  compareChronologically,
+  formatPlayedOn,
+  todayInNorway,
+} from "@/lib/dates";
+import { occasionSuggestions } from "@/lib/occasions";
 import { updatePointRulesAction, createGameAction } from "./actions";
 
 // Datamodell for turnering med detaljer — inkluderer poengregler
@@ -24,6 +30,9 @@ type GameSummaryResponse = {
   id: string;
   tournamentId: string;
   name: string;
+  location: string | null;
+  playedOn: string | null;
+  occasion: string | null;
   isDone: boolean;
   gameType: string;
 };
@@ -94,13 +103,9 @@ export default async function AdminTournamentDetailPage({ params }: Props) {
   // Hjelpefunksjon — genererer bundet Server Action for opprett spill
   const createGame = createGameAction.bind(null, tournament.id, tournament.slug);
 
-  // Sorterer spill: uferdige øverst, deretter alfabetisk
-  const sortedGames = games
-    .slice()
-    .sort((a, b) => {
-      if (a.isDone !== b.isDone) return a.isDone ? 1 : -1;
-      return a.name.localeCompare(b.name, "nb");
-    });
+  const sortedGames = games.slice().sort(compareChronologically);
+
+  const suggestions = occasionSuggestions(sortedGames);
 
   return (
     <>
@@ -279,6 +284,40 @@ export default async function AdminTournamentDetailPage({ params }: Props) {
             />
           </div>
 
+          <div className="min-w-[160px]">
+            <label htmlFor="playedOn" className="block text-sm font-medium mb-1">
+              Dato
+            </label>
+            <input
+              id="playedOn"
+              name="playedOn"
+              type="date"
+              required
+              defaultValue={todayInNorway()}
+              className="h-9 w-full rounded border border-gray-300 px-2 text-sm"
+            />
+          </div>
+
+          <div className="flex-1 min-w-[180px]">
+            <label htmlFor="occasion" className="block text-sm font-medium mb-1">
+              Anledning (valgfri)
+            </label>
+            <input
+              id="occasion"
+              name="occasion"
+              type="text"
+              maxLength={200}
+              list="occasion-suggestions"
+              placeholder="Fredagspils uke 11"
+              className="h-9 w-full rounded border border-gray-300 px-2 text-sm"
+            />
+            <datalist id="occasion-suggestions">
+              {suggestions.map((o) => (
+                <option key={o} value={o} />
+              ))}
+            </datalist>
+          </div>
+
           <div className="flex-1 min-w-[180px]">
             <label htmlFor="gameType" className="block text-sm font-medium mb-1">
               Spilltype
@@ -345,6 +384,10 @@ export default async function AdminTournamentDetailPage({ params }: Props) {
                 className="flex items-center justify-between gap-4 p-4 border-b border-gray-200 last:border-b-0"
               >
                 <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-sm text-gray-500">
+                    {formatPlayedOn(game.playedOn)}
+                    {game.occasion && ` · ${game.occasion}`}
+                  </span>
                   <span className="text-sm font-medium">{game.name}</span>
                   <span className="text-sm text-gray-500">
                     {game.gameType}

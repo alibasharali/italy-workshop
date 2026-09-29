@@ -1,0 +1,125 @@
+> GET /api/v1/tournaments/b287b099-8e7f-4a0a-8e4e-b57d222adfb8/games
+< 200
+[
+  {
+    "id": "5c7761b6-8b11-421f-bf95-3d357eb95bd6",
+    "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+    "name": "Dart",
+    "location": "Kontoret, kjøkkenet",
+    "playedOn": null,
+    "occasion": null,
+    "isDone": true,
+    "gameType": "Standard"
+  },
+  {
+    "id": "83ce4bb3-97f0-4490-9973-cd9dac21613b",
+    "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+    "name": "Mario Kart",
+    "location": "Kontoret, sofakroken",
+    "playedOn": null,
+    "occasion": null,
+    "isDone": true,
+    "gameType": "Standard"
+  },
+  {
+    "id": "60e6dd75-ce4e-4edb-a5fa-7b5077c6f8f3",
+    "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+    "name": "Shuffleboard",
+    "location": "Kontoret, kjøkkenet",
+    "playedOn": null,
+    "occasion": null,
+    "isDone": false,
+    "gameType": "Standard"
+  }
+]
+
+> GET /api/v1/tournaments/0023efa3-928e-4af7-be67-20d23ace3d2f/games
+< 200
+[
+  {
+    "id": "6e2ebe3a-fc4b-461d-a9a9-479b517b5d96",
+    "tournamentId": "0023efa3-928e-4af7-be67-20d23ace3d2f",
+    "name": "Boccia",
+    "location": "Hagen",
+    "playedOn": null,
+    "occasion": null,
+    "isDone": true,
+    "gameType": "Standard"
+  },
+  {
+    "id": "817112c9-2c3b-47c3-a6f6-2a2d515ca49f",
+    "tournamentId": "0023efa3-928e-4af7-be67-20d23ace3d2f",
+    "name": "Petanque",
+    "location": "Plassen foran huset",
+    "playedOn": null,
+    "occasion": null,
+    "isDone": false,
+    "gameType": "Standard"
+  },
+  {
+    "id": "a0e7d90f-f1fa-407f-8063-e3400d96369d",
+    "tournamentId": "0023efa3-928e-4af7-be67-20d23ace3d2f",
+    "name": "Pizzabaking",
+    "location": "Kjøkkenet",
+    "playedOn": null,
+    "occasion": null,
+    "isDone": true,
+    "gameType": "Standard"
+  },
+  {
+    "id": "3279ec73-9085-4752-a51c-87b52951928a",
+    "tournamentId": "0023efa3-928e-4af7-be67-20d23ace3d2f",
+    "name": "Simracing: Mugello",
+    "location": "Stua",
+    "playedOn": null,
+    "occasion": null,
+    "isDone": true,
+    "gameType": "Simracing"
+  },
+  {
+    "id": "a776a7fa-9e16-4433-8877-87cacb1341aa",
+    "tournamentId": "0023efa3-928e-4af7-be67-20d23ace3d2f",
+    "name": "Vinquiz",
+    "location": "Terrassen",
+    "playedOn": null,
+    "occasion": null,
+    "isDone": true,
+    "gameType": "Standard"
+  }
+]
+
+# Turnering med både daterte og eldre spill uten dato (Fredagspils 2026 fra demodataene, etter AC7)
+> GET /api/v1/tournaments/b287b099-8e7f-4a0a-8e4e-b57d222adfb8/games
+< 200
+[
+    {
+        "id": "60e6dd75-ce4e-4edb-a5fa-7b5077c6f8f3",
+        "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+        "name": "Shuffleboard",
+        "location": "Kontoret, kjøkkenet",
+        "playedOn": "2026-02-27",
+        "occasion": null,
+        "isDone": false,
+        "gameType": "Standard"
+    },
+    {
+        "id": "5c7761b6-8b11-421f-bf95-3d357eb95bd6",
+        "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+        "name": "Dart",
+        "location": "Kontoret, kjøkkenet",
+        "playedOn": null,
+        "occasion": null,
+        "isDone": true,
+        "gameType": "Standard"
+    },
+    {
+        "id": "83ce4bb3-97f0-4490-9973-cd9dac21613b",
+        "tournamentId": "b287b099-8e7f-4a0a-8e4e-b57d222adfb8",
+        "name": "Mario Kart",
+        "location": "Kontoret, sofakroken",
+        "playedOn": null,
+        "occasion": null,
+        "isDone": true,
+        "gameType": "Standard"
+    }
+]

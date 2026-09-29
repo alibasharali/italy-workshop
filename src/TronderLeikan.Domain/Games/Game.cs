@@ -18,6 +18,10 @@ public sealed class Game : Entity
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
     public string? Location { get; private set; }
+    // Null bare for spill registrert før datoen ble påkrevd
+    public DateOnly? PlayedOn { get; private set; }
+    // Hvilken tur eller fredagspils spillet hørte til
+    public string? Occasion { get; private set; }
     public bool IsDone { get; private set; }
     public GameType GameType { get; private set; }
     public bool IsOrganizersParticipating { get; private set; }
@@ -30,8 +34,8 @@ public sealed class Game : Entity
     public IReadOnlyList<Guid> SecondPlace => _secondPlace.AsReadOnly();
     public IReadOnlyList<Guid> ThirdPlace => _thirdPlace.AsReadOnly();
 
-    public static Game Create(string name, Guid tournamentId, GameType gameType = GameType.Standard) =>
-        new() { Id = Guid.NewGuid(), Name = name, TournamentId = tournamentId, GameType = gameType };
+    public static Game Create(string name, Guid tournamentId, DateOnly playedOn, GameType gameType = GameType.Standard) =>
+        new() { Id = Guid.NewGuid(), Name = name, TournamentId = tournamentId, PlayedOn = playedOn, GameType = gameType };
 
     // Legg til deltaker — duplikater ignoreres
     public void AddParticipant(Guid personId)
@@ -79,4 +83,10 @@ public sealed class Game : Entity
     public void RemoveBanner() => HasBanner = false;
     public void UpdateDescription(string? description) => Description = description;
     public void UpdateLocation(string? location) => Location = location;
+    // Datoen kan endres, men ikke fjernes
+    public void UpdatePlayedOn(DateOnly playedOn) => PlayedOn = playedOn;
+
+    // Mellomrom rundt fjernes, og tom tekst betyr ingen anledning
+    public void UpdateOccasion(string? occasion) =>
+        Occasion = string.IsNullOrWhiteSpace(occasion) ? null : occasion.Trim();
 }

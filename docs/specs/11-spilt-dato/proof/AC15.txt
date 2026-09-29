@@ -1,0 +1,25 @@
+> GET /api/v1/tournaments/77496840-a5c8-4fde-904e-aef60e7b3ac9/scoreboard (før)
+[
+    {
+        "personId": "80d9b5ec-065d-44f6-9e42-8d93e7b8f9b2",
+        "firstName": "Bevis",
+        "lastName": "Vinner",
+        "totalPoints": 6,
+        "rank": 1
+    }
+]
+
+> PUT /api/v1/games/defc6968-a7c4-478c-a442-eb8c66cc146b
+{"name":"Nyttårsdart","playedOn":"2025-12-31","occasion":"Julebord"}
+< 204
+
+> GET /api/v1/tournaments/77496840-a5c8-4fde-904e-aef60e7b3ac9/scoreboard (etter)
+[
+    {
+        "personId": "80d9b5ec-065d-44f6-9e42-8d93e7b8f9b2",
+        "firstName": "Bevis",
+        "lastName": "Vinner",
+        "totalPoints": 6,
+        "rank": 1
+    }
+]

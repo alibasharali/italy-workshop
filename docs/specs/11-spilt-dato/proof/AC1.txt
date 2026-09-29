@@ -1,0 +1,30 @@
+> POST /api/v1/games
+{
+  "tournamentId": "77496840-a5c8-4fde-904e-aef60e7b3ac9",
+  "name": "Dart",
+  "gameType": "Standard",
+  "playedOn": "2026-03-13"
+}
+< 201
+"661f0db8-9f26-45f8-9db5-59f621856ea4"
+
+> GET /api/v1/games/661f0db8-9f26-45f8-9db5-59f621856ea4
+< 200
+{
+  "id": "661f0db8-9f26-45f8-9db5-59f621856ea4",
+  "tournamentId": "77496840-a5c8-4fde-904e-aef60e7b3ac9",
+  "name": "Dart",
+  "description": null,
+  "playedOn": "2026-03-13",
+  "occasion": null,
+  "isDone": false,
+  "gameType": "Standard",
+  "hasBanner": false,
+  "isOrganizersParticipating": false,
+  "participants": [],
+  "organizers": [],
+  "spectators": [],
+  "firstPlace": [],
+  "secondPlace": [],
+  "thirdPlace": []
+}

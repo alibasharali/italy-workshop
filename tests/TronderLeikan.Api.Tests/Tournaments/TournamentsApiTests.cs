@@ -73,7 +73,7 @@ public class TournamentsApiTests(TronderLeikanApiFactory factory)
             new { name = "Spill-liste", slug = $"spill-{Guid.NewGuid():N}" }))
             .Content.ReadFromJsonAsync<Guid>();
 
-        var gameResponse = await _client.PostAsJsonAsync("/api/v1/games", new { name = "Boccia", tournamentId });
+        var gameResponse = await _client.PostAsJsonAsync("/api/v1/games", new { name = "Boccia", tournamentId, playedOn = "2026-03-13" });
         gameResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         var gameId = await gameResponse.Content.ReadFromJsonAsync<Guid>();
 
@@ -85,6 +85,24 @@ public class TournamentsApiTests(TronderLeikanApiFactory factory)
         body[0].GetProperty("id").GetGuid().Should().Be(gameId);
         body[0].GetProperty("name").GetString().Should().Be("Boccia");
         body[0].GetProperty("isDone").GetBoolean().Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task GET_games_returnerer_spillene_kronologisk_med_dato()
+    {
+        var tournamentId = await (await _client.PostAsJsonAsync("/api/v1/tournaments",
+            new { name = "Sesong", slug = $"sesong-{Guid.NewGuid():N}" }))
+            .Content.ReadFromJsonAsync<Guid>();
+        foreach (var (name, playedOn) in new[] { ("Dart", "2026-03-13"), ("Boccia", "2026-03-13"), ("Mario Kart", "2026-03-06") })
+            (await _client.PostAsJsonAsync("/api/v1/games", new { name, tournamentId, playedOn }))
+                .StatusCode.Should().Be(HttpStatusCode.Created);
+
+        var body = await (await _client.GetAsync($"/api/v1/tournaments/{tournamentId}/games"))
+            .Content.ReadFromJsonAsync<JsonElement>();
+
+        body.EnumerateArray().Select(g => g.GetProperty("name").GetString())
+            .Should().Equal("Mario Kart", "Boccia", "Dart");
+        body[0].GetProperty("playedOn").GetString().Should().Be("2026-03-06");
     }
 
     [Fact]

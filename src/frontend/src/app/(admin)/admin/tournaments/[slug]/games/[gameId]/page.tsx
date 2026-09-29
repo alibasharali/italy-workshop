@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { addParticipantAction, completeGameAction } from "./actions";
+import { formatPlayedOn } from "@/lib/dates";
+import { occasionSuggestions } from "@/lib/occasions";
+import {
+  addParticipantAction,
+  completeGameAction,
+  updateGameAction,
+} from "./actions";
 
 // Datamodell for spill med detaljer - inkluderer deltakere og plasseringer
 type GameDetailResponse = {
@@ -9,6 +15,8 @@ type GameDetailResponse = {
   tournamentId: string;
   name: string;
   description?: string;
+  playedOn: string | null;
+  occasion: string | null;
   isDone: boolean;
   gameType: string;
   isOrganizersParticipating: boolean;
@@ -28,6 +36,18 @@ type PersonSummaryResponse = {
   hasProfileImage: boolean;
 };
 
+// Kortform av spillene i turneringen - brukes til forslag om anledning
+type GameSummaryResponse = {
+  id: string;
+  tournamentId: string;
+  name: string;
+  location: string | null;
+  playedOn: string | null;
+  occasion: string | null;
+  isDone: boolean;
+  gameType: string;
+};
+
 // API-basis-URL - hentes fra miljøvariabel, kun tilgjengelig server-side
 const API_BASE = process.env.API_BASE_URL ?? "http://localhost:5000";
 
@@ -41,6 +61,22 @@ async function getGame(gameId: string): Promise<GameDetailResponse | null> {
     return res.json();
   } catch {
     return null;
+  }
+}
+
+// Henter spillene i turneringen - returnerer tom liste ved feil
+async function getTournamentGames(
+  tournamentId: string
+): Promise<GameSummaryResponse[]> {
+  try {
+    const res = await fetch(
+      `${API_BASE}/api/v1/tournaments/${tournamentId}/games`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
   }
 }
 
@@ -84,6 +120,11 @@ export default async function AdminGameDetailPage({ params }: Props) {
     notFound();
   }
 
+  // Anledninger som alt er brukt i samme turnering, til forslag i redigeringsskjemaet
+  const suggestions = occasionSuggestions(
+    await getTournamentGames(game.tournamentId)
+  );
+
   // Hjelpefunksjon - slår opp fullt navn på en person via ID
   function getPersonName(personId: string): string {
     const person = persons.find((p) => p.id === personId);
@@ -107,6 +148,7 @@ export default async function AdminGameDetailPage({ params }: Props) {
 
   // Bundet Server Action - binder gameId og turneringens slug inn i actionen
   const completeGame = completeGameAction.bind(null, gameId, tournamentSlug);
+  const updateGame = updateGameAction.bind(null, gameId, tournamentSlug);
 
   return (
     <>
@@ -122,6 +164,14 @@ export default async function AdminGameDetailPage({ params }: Props) {
       <header className="mt-4 mb-6">
         <h1 className="text-2xl font-semibold mb-1">{game.name}</h1>
         <div className="flex items-center gap-2 text-sm text-gray-500">
+          <span>{formatPlayedOn(game.playedOn)}</span>
+          {game.occasion && (
+            <>
+              <span>·</span>
+              <span>{game.occasion}</span>
+            </>
+          )}
+          <span>·</span>
           <span>{game.gameType}</span>
           <span>·</span>
           <span>{game.isDone ? "Ferdig" : "Pågår"}</span>
@@ -133,6 +183,91 @@ export default async function AdminGameDetailPage({ params }: Props) {
           )}
         </div>
       </header>
+
+      {/* ---- Rediger spill ---- */}
+      <section
+        className="border border-gray-200 rounded p-4 mb-4"
+        aria-labelledby="edit-game-title"
+      >
+        <h2 className="text-lg font-semibold mb-4" id="edit-game-title">
+          Rediger spill
+        </h2>
+
+        <form action={updateGame} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="editName" className="block text-sm font-medium mb-1">
+              Navn
+            </label>
+            <input
+              id="editName"
+              name="name"
+              type="text"
+              required
+              maxLength={500}
+              defaultValue={game.name}
+              className="h-9 w-full rounded border border-gray-300 px-2 text-sm"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="editPlayedOn" className="block text-sm font-medium mb-1">
+              Dato
+            </label>
+            <input
+              id="editPlayedOn"
+              name="playedOn"
+              type="date"
+              required
+              defaultValue={game.playedOn ?? ""}
+              className="h-9 w-full rounded border border-gray-300 px-2 text-sm"
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <label htmlFor="editOccasion" className="block text-sm font-medium mb-1">
+              Anledning (valgfri)
+            </label>
+            <input
+              id="editOccasion"
+              name="occasion"
+              type="text"
+              maxLength={200}
+              list="edit-occasion-suggestions"
+              defaultValue={game.occasion ?? ""}
+              placeholder="Fredagspils uke 11"
+              className="h-9 w-full rounded border border-gray-300 px-2 text-sm"
+            />
+            <datalist id="edit-occasion-suggestions">
+              {suggestions.map((o) => (
+                <option key={o} value={o} />
+              ))}
+            </datalist>
+          </div>
+
+          <div className="sm:col-span-2">
+            <label htmlFor="editDescription" className="block text-sm font-medium mb-1">
+              Beskrivelse
+            </label>
+            <textarea
+              id="editDescription"
+              name="description"
+              rows={3}
+              maxLength={5000}
+              defaultValue={game.description ?? ""}
+              className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <button
+              type="submit"
+              className="h-9 rounded bg-gray-900 px-3 text-sm text-white hover:bg-gray-700"
+            >
+              Lagre endringer
+            </button>
+          </div>
+        </form>
+      </section>
 
       {/* ---- Legg til deltaker ---- */}
       {!game.isDone && (
