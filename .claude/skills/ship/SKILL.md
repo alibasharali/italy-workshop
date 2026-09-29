@@ -29,7 +29,7 @@ Done when no finding is open.
 
 ## 4. Retro
 
-Look back over the story, in this session and in the branch's commits and review threads. Collect every **correction**:
+Look back over the story: this session, the branch's commits and review threads, and the *Rulings* and review outcomes in `docs/specs/<N>-<slug>/progress.md`. Collect every **correction**:
 - a place where the developer corrected you or had to explain something
 - a place where you searched long for something that should have been written down
 - a mistake that a hook, CI or the review caught

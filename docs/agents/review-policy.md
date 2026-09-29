@@ -1,6 +1,6 @@
 # Review policy
 
-Both reviewers follow this file: the local review in `/ship` and the Claude review in CI. Every finding gets exactly one of two classes.
+Every reviewer follows this file: the `slice-reviewer` after each slice, the whole-branch review in `/ship`, and the Claude review in CI. Every finding gets exactly one of two classes.
 
 ## Auto-fix
 
