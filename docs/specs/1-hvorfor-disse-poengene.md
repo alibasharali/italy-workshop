@@ -1,7 +1,7 @@
 ---
 issue: 1
 title: Hvorfor fikk jeg disse poengene?
-status: draft
+status: approved
 branch: feat/1-hvorfor-disse-poengene
 ---
 
