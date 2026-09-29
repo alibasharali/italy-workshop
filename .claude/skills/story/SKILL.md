@@ -36,7 +36,7 @@ Invoke the `write-spec` skill for issue N. Done when the spec file is committed 
 
 ## 5. Gate
 
-Stop here and hand over to the human. Show the spec path and a five-line summary of the domain decisions, then ask them to read the spec and approve it. Their approval is the only permission to write production code.
+Stop here and hand over to the human. Show the spec path and a five-line summary of the domain decisions, then ask them to read the spec and approve it. Tell them how: reply "godkjent" in the chat, or set `status: approved` in the front matter themselves and push. Their approval is the only permission to write production code.
 
 - If they request changes, go back into `write-spec` with their feedback.
 - If they approve, set `status: approved` in the front matter and commit it as `docs(spec): godkjent #<N>`.
