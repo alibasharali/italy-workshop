@@ -1,7 +1,7 @@
 ---
 issue: 13
 title: Min historikk
-status: draft
+status: approved
 branch: feat/13-min-historikk
 ---
 
