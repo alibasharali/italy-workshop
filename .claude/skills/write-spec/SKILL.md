@@ -41,6 +41,6 @@ Fill in [spec-template.md](spec-template.md) as `docs/specs/<N>-<slug>.md`, usin
 ## 4. Publish
 
 1. Commit as `docs(spec): #<N> <title>` and push the branch.
-2. In the issue body, replace the `**Spec:**` line with a link to the spec on the branch: `https://github.com/alibasharali/italy-workshop/blob/<branch>/docs/specs/<file>`. Edit the body with `gh issue edit <N> --body-file`.
+2. In the issue body, replace the `**Spec:**` line with a link to the spec on `main`: `https://github.com/alibasharali/italy-workshop/blob/main/docs/specs/<file>`. Link to `main`, never to the story branch: the branch is deleted on merge, and the link works from then on. Edit the body with `gh issue edit <N> --body-file`.
 
 Done when the pushed spec is `status: draft` and the issue links to it.
